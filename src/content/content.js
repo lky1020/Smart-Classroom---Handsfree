@@ -160,38 +160,37 @@ function handPoseInRealTime() {
         if(Object.keys(handsfree.data).length !== 0){
             
             if(handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined){
-                // console.log(handsfree);
+                console.log(handsfree);
                 // console.log(handsfree.data.hands.multiHandedness[0].score);
-
                 var hands = handsfree.data.hands.multiHandLandmarks[0];
                 var landmarks = new Array();
 
                 for(let i = 0; i < 21; i++){
                     
-                    // var deviation;
-                    // var x_axis;
-                    // var y_axis;
+                    var deviation;
+                    var x_axis;
+                    var y_axis;
 
-                    // // Left Hand == Right Handness (Video Not flip in this case)
-                    // if(handsfree.data.hands.multiHandedness[0].label === "Right"){
-                    //     deviation = left_deviation;
+                    // Left Hand == Right Handness (Video Not flip in this case)
+                    if(handsfree.data.hands.multiHandedness[0].label === "Right"){
+                        deviation = left_deviation;
 
-                    //     //Change x, y, point to 3 digit value 
-                    //     /*
-                    //         (Remember Bring it out)
-                    //     */
-                    //     x_axis  = hands[i].x  * 1000 + deviation.x[i];
-                    //     y_axis = hands[i].y * 1000 + deviation.y[i];
+                        //Change x, y, point to 3 digit value 
+                        /*
+                            (Remember Bring it out)
+                        */
+                        x_axis  = hands[i].x  * 1000 + deviation.x[i];
+                        y_axis = hands[i].y * 1000 + deviation.y[i];
 
-                    // }else{
-                    //     //Change x, y, point to 3 digit value
-                    //     x_axis  = hands[i].x  * 1000;
-                    //     y_axis = hands[i].y * 1000;
+                    }else{
+                        //Change x, y, point to 3 digit value
+                        x_axis  = hands[i].x  * 1000;
+                        y_axis = hands[i].y * 1000;
 
-                    // }
+                    }
 
-                    const  x_axis  = hands[i].x  * 1000;
-                    const y_axis = hands[i].y * 1000;
+                    // const  x_axis  = hands[i].x  * 1000;
+                    // const y_axis = hands[i].y * 1000;
 
                     var landmark = {x: x_axis, y: y_axis};
                         
