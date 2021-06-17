@@ -950,23 +950,6 @@ async function overrideGetUserMedia() {
         // `mutations` is an array of mutations that occurred
         // `me` is the MutationObserver instance
 
-        // const videos = Array.from(document.querySelectorAll('video'))
-        //     .filter(video => video.readyState != 0)
-        //     .filter(video => video.disablePictureInPicture == false)
-        //     .sort((v1, v2) => {
-                
-        //         const v1Rect = v1.getClientRects()[0]||{width:0,height:0};
-        //         const v2Rect = v2.getClientRects()[0]||{width:0,height:0};
-
-        //         return ((v2Rect.width * v2Rect.height) - (v1Rect.width * v1Rect.height));
-        //     });
-
-        // console.log(videos);
-        
-        // if (videos.length === 0) {
-        //     return;
-        // }
-
         var canvas = document.getElementById("realVideo");
         if (canvas) {
             console.log('I\'m In!');
@@ -996,20 +979,9 @@ function realVideoAdded(video) {
 
         state.video.play();
 
-        // segmentBodyInRealTime();
         handPoseInRealTime();
     };
 
-    //Set Width and Height
-    // state.video.width = state.video.videoWidth;
-    // state.video.height = state.video.videoHeight;
-    // state.canvas.width = state.video.width;
-    // state.canvas.height = state.video.height;
-
-    // state.video.play();
-
-    // segmentBodyInRealTime();
-    // handPoseInRealTime();
 }
 
 async function start() {
@@ -1030,10 +1002,6 @@ function injectMediaSourceSwap() {
         script.remove();
     };
     (document.head || document.documentElement).appendChild(script);
-}
-
-function injectHandGesture(){
-    
 }
 
 function handPoseInRealTime() {
@@ -1060,6 +1028,7 @@ function handPoseInRealTime() {
 
                 }else {
                     handGesture = gesture[1];
+
                 }
 
                 if(handGesture.name !== ""){
@@ -1143,8 +1112,8 @@ function handPoseInRealTime() {
                             landmarks[secondJointIndex].x,
                             landmarks[secondJointIndex].y
                         );
-                        ctx.strokeStyle = "plum";
-                        ctx.lineWidth = 4;
+                        ctx.strokeStyle = "SpringGreen";
+                        ctx.lineWidth = 5;
                         ctx.stroke();
                     }
 
@@ -1162,7 +1131,7 @@ function handPoseInRealTime() {
                         ctx.arc(x, y, 5, 0, 3 * Math.PI);
         
                         //Set Line Color
-                        ctx.fillStyle = "indigo";
+                        ctx.fillStyle = "crimson";
                         ctx.fill();
                     }
                 }
