@@ -1054,88 +1054,22 @@ function handPoseInRealTime() {
                     ctx.restore();
                 }
 
-                for(let i = 0; i < 21; i++){
-                    
-                    var deviation;
-                    var x_axis;
-                    var y_axis;
 
-                    // Left Hand == Right Handness (Video Not flip in this case)
-                    if(handsfree.data.hands.multiHandedness[0].label === "Right"){
-                        deviation = left_deviation;
-
-                        //Change x, y, point to 3 digit value 
-                        /*
-                            (Remember Bring it out)
-                        */
-                        x_axis  = hands[i].x  * 1000 + deviation.x[i];
-                        y_axis = hands[i].y * 1000 + deviation.y[i];
-
-                    }else{
-                        //Change x, y, point to 3 digit value
-                        x_axis  = hands[i].x  * 1000;
-                        y_axis = hands[i].y * 1000;
-
-                    }
-
-                    // const  x_axis  = hands[i].x  * 1000;
-                    // const y_axis = hands[i].y * 1000;
-
-                    var landmark = {x: x_axis, y: y_axis};
+                if (handsfree.data.hands.multiHandLandmarks) {
+                    for (const landmarks of handsfree.data.hands.multiHandLandmarks) {
                         
-                    landmarks.push(landmark);
+                        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+                            color: '#00FF00', 
+                            lineWidth: 5
+                        });
 
+                        drawLandmarks(ctx, landmarks, {
+                            color: '#FF0000',
+                            lineWidth: 2
+                        });
+                    }
                 }
                 
-                // console.log(landmarks);
-                // console.log('Done');
-
-                // Loop through fingers (connect the point)
-                for(let i = 0; i < Object.keys(fingerJoints).length; i++){
-                        
-                    let finger = Object.keys(fingerJoints)[i];
-    
-                    //Loop through pairs of joints
-                    for(let j = 0; j < fingerJoints[finger].length - 1; j++){
-                        
-                        //Get pairs of joints
-                        const firstJointIndex = fingerJoints[finger][j];
-                        const secondJointIndex = fingerJoints[finger][j + 1];
-
-                        // Draw path
-                        ctx.beginPath();
-                        ctx.moveTo(
-                            landmarks[firstJointIndex].x,
-                            landmarks[firstJointIndex].y
-                        );
-                        ctx.lineTo(
-                            landmarks[secondJointIndex].x,
-                            landmarks[secondJointIndex].y
-                        );
-                        ctx.strokeStyle = "SpringGreen";
-                        ctx.lineWidth = 5;
-                        ctx.stroke();
-                    }
-
-                    //Draw the hand landmarks point
-                    for(let i = 0; i < landmarks.length; i++){
-                       
-                        //Get x point
-                        const x = landmarks[i].x;
-        
-                        //Get y point
-                        const y = landmarks[i].y;
-        
-                        //Start drawing
-                        ctx.beginPath();
-                        ctx.arc(x, y, 5, 0, 3 * Math.PI);
-        
-                        //Set Line Color
-                        ctx.fillStyle = "crimson";
-                        ctx.fill();
-                    }
-                }
-
                 ctx.beginPath();
                 ctx.save();
 

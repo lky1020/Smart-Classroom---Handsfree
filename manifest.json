@@ -39,6 +39,8 @@
       "js": [
         "/assets/js/handsfree/handsfree.js",
         "/src/content/browser-polyfill.js",
+        "/src/content/drawing_utils.js",
+        "/src/content/hands.js",
         "/src/content/content.js"
       ],
       "all_frames": true,
