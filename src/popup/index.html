@@ -1,22 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="/assets/css/spectre.css">
-  <link rel="stylesheet" href="/assets/css/popup.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/assets/css/spectre.css">
+    <link rel="stylesheet" href="/assets/css/popup.css">
 </head>
+
 <body>
-  <section class="container grid-lg">
-    <h1 style="font-size: 1.5em"><img src="/assets/favicon.png" style="vertical-align: middle;" height="32px"> Handsfree Browser</h1>
-    <div class="columns">
-      <div class="column">
-        <button id="handsfree-start" class="btn btn-primary btn-block">Go Handsfree</button>
-        <button id="handsfree-stop" class="btn btn-error d-none btn-block">Stop Handsfree</button>
-      </div>
-    </div>
-  </section>
-  
-  <script src="popup.js"></script>
+    <section class="container grid-lg">
+        <h1 style="font-size: 1.5em"><img src="/assets/favicon.png" style="vertical-align: middle;" height="32px"> Smart Classroom</h1>
+        
+        <b>Model State:</b><br>
+        <div style="margin-left: 15px;">
+            <!-- Status -->
+            <span>Status: <span id="status" class="label label-error">Uninitialized</span></span>
+        
+            <br>
+            
+            <!-- Hand Module -->
+            <div class="columns">
+                <div class="column">
+                    Hand Module: 
+                </div>
+                <div class="column" style="text-align: end;">
+                    <label class="switch">
+                        <input type="checkbox" checked>
+                        <span class="slider round"></span>
+                    </label>
+                </div>
+            </div>
+        </div>
+    
+        <br>
+        
+        <div class="columns">
+            <div class="column">
+                <button id="handsfree-start" class="btn btn-primary btn-block">Start Model</button>
+                <button id="handsfree-stop" class="btn btn-error d-none btn-block">Stop Model</button>
+            </div>
+        </div>
+    </section>
+
+    <script src="popup.js"></script>
 </body>
+
 </html>
