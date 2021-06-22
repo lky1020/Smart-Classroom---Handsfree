@@ -907,14 +907,8 @@ chrome.runtime.onMessage.addListener(function(message) {
 
 const state = {
     video: null,
-    image: null,
-    net: null,
     canvas: null,
-    backgroundImage: null,
-    backgroundSrc: null,
-    gameIsOn: true,
-    maskingFrameCounter: 0,
-    maskCache: null,
+    handModuleIsOn: true,
 };
 
 async function overrideGetUserMedia() {
@@ -973,8 +967,7 @@ async function start() {
 }
 
 async function loadState() {
-    //gameIsOn - On / Off function
-    state.gameIsOn = (await browser.storage.sync.get(["gameIsOn"])).gameIsOn;
+    state.handModuleIsOn = (await browser.storage.sync.get(["handModuleIsOn"])).handModuleIsOn;
 }
 
 function injectMediaSourceSwap() {
@@ -994,86 +987,90 @@ function handPoseInRealTime() {
         ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
         ctx.drawImage(state.video, 0, 0);
 
-        if(Object.keys(handsfree.data).length !== 0){
+        if(state.handModuleIsOn){
+            if(Object.keys(handsfree.data).length !== 0){
             
-            if(handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined){
-                // console.log(handsfree);
-                // console.log(handsfree.data.hands.multiHandedness[0].score);
-                var hands = handsfree.data.hands.multiHandLandmarks[0];
-                var landmarks = new Array();
-
-                const gesture = handsfree.model.hands.getGesture();
-
-                var handGesture;
-
-                if(gesture[0] != null){
-                    handGesture = gesture[0];
-
-                }else {
-                    handGesture = gesture[1];
-
-                }
-
-                if(handGesture.name !== ""){
+                if(handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined){
+                    // console.log(handsfree);
+                    // console.log(handsfree.data.hands.multiHandedness[0].score);
+                    var hands = handsfree.data.hands.multiHandLandmarks[0];
+                    var landmarks = new Array();
+    
+                    const gesture = handsfree.model.hands.getGesture();
+    
+                    var handGesture;
+    
+                    if(gesture[0] != null){
+                        handGesture = gesture[0];
+    
+                    }else {
+                        handGesture = gesture[1];
+    
+                    }
+    
+                    if(handGesture.name !== ""){
+                        ctx.beginPath();
+                        ctx.save();
+    
+                        ctx.font = "30px Arial";
+                        ctx.fillStyle = "green";
+                        ctx.translate(1250, 100);
+                        ctx.scale(-1, 1);
+                        ctx.fillText("Gesture: " + handGesture.name, 0, 0);
+                        ctx.restore();
+    
+                    }else{
+                        ctx.beginPath();
+                        ctx.save();
+    
+                        ctx.font = "30px Arial";
+                        ctx.fillStyle = "red";
+                        ctx.translate(1250, 100);
+                        ctx.scale(-1, 1);
+                        ctx.fillText("Gesture: Undefined", 0, 0);
+                        ctx.restore();
+                    }
+    
+    
+                    if (handsfree.data.hands.multiHandLandmarks) {
+                        for (const landmarks of handsfree.data.hands.multiHandLandmarks) {
+                            
+                            drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
+                                color: '#00FF00', 
+                                lineWidth: 5
+                            });
+    
+                            drawLandmarks(ctx, landmarks, {
+                                color: '#FF0000',
+                                lineWidth: 2
+                            });
+                        }
+                    }
+                    
                     ctx.beginPath();
                     ctx.save();
-
+    
                     ctx.font = "30px Arial";
                     ctx.fillStyle = "green";
-                    ctx.translate(1250, 100);
+                    ctx.translate(1250, 50);
                     ctx.scale(-1, 1);
-                    ctx.fillText("Gesture: " + handGesture.name, 0, 0);
+                    ctx.fillText("Hand Detected!", 0, 0);
                     ctx.restore();
-
+    
                 }else{
                     ctx.beginPath();
                     ctx.save();
-
+    
                     ctx.font = "30px Arial";
                     ctx.fillStyle = "red";
-                    ctx.translate(1250, 100);
+                    ctx.translate(1250, 50);
                     ctx.scale(-1, 1);
-                    ctx.fillText("Gesture: Undefined", 0, 0);
+                    ctx.fillText("Finding Hands...", 0, 0);
                     ctx.restore();
                 }
-
-
-                if (handsfree.data.hands.multiHandLandmarks) {
-                    for (const landmarks of handsfree.data.hands.multiHandLandmarks) {
-                        
-                        drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
-                            color: '#00FF00', 
-                            lineWidth: 5
-                        });
-
-                        drawLandmarks(ctx, landmarks, {
-                            color: '#FF0000',
-                            lineWidth: 2
-                        });
-                    }
-                }
-                
-                ctx.beginPath();
-                ctx.save();
-
-                ctx.font = "30px Arial";
-                ctx.fillStyle = "green";
-                ctx.translate(1250, 50);
-                ctx.scale(-1, 1);
-                ctx.fillText("Hand Detected!", 0, 0);
-                ctx.restore();
-
-            }else{
-                ctx.beginPath();
-                ctx.save();
-
-                ctx.font = "30px Arial";
-                ctx.fillStyle = "red";
-                ctx.translate(1250, 50);
-                ctx.scale(-1, 1);
-                ctx.fillText("Finding Hands...", 0, 0);
-                ctx.restore();
             }
+        }else{
+            console.log('hihi');
         }
 
         //Refresh

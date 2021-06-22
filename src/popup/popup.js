@@ -1,8 +1,23 @@
 const $el = {
     start: document.querySelector('#handsfree-start'),
     stop: document.querySelector('#handsfree-stop'),
-    status: document.querySelector('#status')
+    status: document.querySelector('#status'),
+    ckHand: document.querySelector('#ckHand')
 }
+
+chrome.storage.sync.get(['handModuleIsOn'], (result) => {
+    $el.ckHand.checked = result.handModuleIsOn;
+});
+
+$el.ckHand.addEventListener('click', () => {
+    chrome.storage.sync.set({ "handModuleIsOn": $el.ckHand.checked });
+    if ($el.ckHand.checked == true) {
+        chrome.storage.sync.set({ "handModuleIsOn": $el.ckHand.checked = true });
+    }
+    else {
+        chrome.storage.sync.set({ "handModuleIsOn": $el.ckHand.checked = false });
+    }
+})
 
 /**
  * Start the webcam
