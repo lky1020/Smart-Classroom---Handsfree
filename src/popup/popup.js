@@ -2,22 +2,55 @@ const $el = {
     start: document.querySelector('#handsfree-start'),
     stop: document.querySelector('#handsfree-stop'),
     status: document.querySelector('#status'),
-    ckHand: document.querySelector('#ckHand')
+    ckHand: document.querySelector('#ckHand'),
+    ddlHandGesture: document.querySelector('#ddlHandGesture')
 }
+
+let previousCK;
 
 chrome.storage.sync.get(['handModuleIsOn'], (result) => {
     $el.ckHand.checked = result.handModuleIsOn;
+    previousCK = result.handModuleIsOn;
 });
 
 $el.ckHand.addEventListener('click', () => {
+    // Set checked for first time
     chrome.storage.sync.set({ "handModuleIsOn": $el.ckHand.checked });
+
+    // Load previous selected hand gestureW
     if ($el.ckHand.checked == true) {
         chrome.storage.sync.set({ "handModuleIsOn": $el.ckHand.checked = true });
     }
     else {
         chrome.storage.sync.set({ "handModuleIsOn": $el.ckHand.checked = false });
     }
+
+    // Remove text when swicth go the previous one
+    var txtInfo = document.getElementById("txtInfo");
+
+
+    if ($el.ckHand.checked != previousCK) {
+        txtInfo.innerHTML = 'Please refresh Meet to apply change!';
+    }else{
+        txtInfo.innerHTML = '';
+    }
+    
 })
+
+chrome.storage.sync.get(['handGesture'], (result) => {
+    var handGesture = document.getElementById("ddlHandGesture");
+    
+    // Load previous selected hand gesture
+    for(let i = 0; i < handGesture.options.length; i++){
+        if(handGesture.options[i].value === result.handGesture){
+            handGesture.selectedIndex = i;
+        }
+    }
+});
+
+$el.ddlHandGesture.addEventListener('change', (event) => {
+    chrome.storage.sync.set({ "handGesture": event.target.value});
+});
 
 /**
  * Start the webcam

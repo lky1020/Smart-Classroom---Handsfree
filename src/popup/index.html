@@ -31,8 +31,20 @@
                     </label>
                 </div>
             </div>
+
+            <div class="columns" style="margin-left: 15px;">
+                <div class="column">
+                    Hand Gesture: 
+                </div>
+                <div class="column" style="text-align: end;">
+                    <select id="ddlHandGesture" name="handGesture">
+                        <option value="number">Number</option>
+                        <option value="sign">Sign</option>
+                      </select>
+                </div>
+            </div>
         </div>
-    
+
         <br>
         
         <div class="columns">
@@ -41,6 +53,9 @@
                 <button id="handsfree-stop" class="btn btn-error d-none btn-block">Stop Model</button>
             </div>
         </div>
+
+        <span id="txtInfo" style="color: red;"></span>
+
     </section>
 
     <script src="popup.js"></script>
