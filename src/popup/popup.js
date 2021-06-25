@@ -7,6 +7,8 @@ const $el = {
 }
 
 let previousCK;
+let previousddl;
+var txtInfo = document.getElementById("txtInfo");
 
 chrome.storage.sync.get(['handModuleIsOn'], (result) => {
     $el.ckHand.checked = result.handModuleIsOn;
@@ -26,9 +28,6 @@ $el.ckHand.addEventListener('click', () => {
     }
 
     // Remove text when swicth go the previous one
-    var txtInfo = document.getElementById("txtInfo");
-
-
     if ($el.ckHand.checked != previousCK) {
         txtInfo.innerHTML = 'Please refresh Meet to apply change!';
     }else{
@@ -44,12 +43,20 @@ chrome.storage.sync.get(['handGesture'], (result) => {
     for(let i = 0; i < handGesture.options.length; i++){
         if(handGesture.options[i].value === result.handGesture){
             handGesture.selectedIndex = i;
+            previousddl = result.handGesture;
         }
     }
 });
 
 $el.ddlHandGesture.addEventListener('change', (event) => {
     chrome.storage.sync.set({ "handGesture": event.target.value});
+
+    // Remove text when swicth go the previous one
+    if ($el.ddlHandGesture.value != previousddl) {
+        txtInfo.innerHTML = 'Please refresh Meet to apply change!';
+    }else{
+        txtInfo.innerHTML = '';
+    }
 });
 
 /**
