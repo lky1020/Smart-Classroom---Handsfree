@@ -8,6 +8,8 @@ const handsfree = new Handsfree({
     }
 })
 
+handsfree.enablePlugins('browser')
+
 
 function number_gesture() {
     // One
@@ -1926,6 +1928,32 @@ function loadHandGesture() {
         case 'sign':
             sign_gesture();
             return
+    }
+
+    if(state.handGesture === 'mouse'){
+        handsfree.use('pinchClick', ({hands}) => {
+            if (!hands.multiHandLandmarks) return
+
+            hands.pointer.forEach((pointer, hand) => {
+                if (pointer.isVisible && hands.pinchState[hand][0] === 'start') {
+                const $el = document.elementFromPoint(pointer.x, pointer.y)
+                if ($el) {
+                    $el.dispatchEvent(
+                    new MouseEvent('click', {
+                        bubbles: true,
+                        cancelable: true,
+                        clientX: pointer.x,
+                        clientY: pointer.y
+                    })
+                    )
+            
+                    // Focus
+                    if (['INPUT', 'TEXTAREA', 'BUTTON', 'A'].includes($el.nodeName))
+                    $el.focus()
+                }
+                }
+            })
+        })
     }
 }
 
