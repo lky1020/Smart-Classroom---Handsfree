@@ -8,8 +8,6 @@ const handsfree = new Handsfree({
     }
 })
 
-handsfree.enablePlugins('browser')
-
 
 function number_gesture() {
     // One
@@ -372,7 +370,7 @@ function number_gesture() {
                 "addCurl",
                 "Thumb",
                 "HalfCurl",
-                0.5555555555555556
+                0.42857142857142855
             ],
             [
                 "addDirection",
@@ -384,19 +382,13 @@ function number_gesture() {
                 "addDirection",
                 "Thumb",
                 "VerticalUp",
-                0.36363636363636365
+                0.35
             ],
             [
                 "addDirection",
                 "Thumb",
-                "HorizontalLeft",
-                0.2727272727272727
-            ],
-            [
-                "addDirection",
-                "Thumb",
-                "DiagonalUpLeft",
-                0.9090909090909091
+                "HorizontalRight",
+                0.15
             ],
             [
                 "addCurl",
@@ -407,13 +399,13 @@ function number_gesture() {
             [
                 "addDirection",
                 "Index",
-                "DiagonalUpLeft",
-                0.4
+                "VerticalUp",
+                0.42857142857142855
             ],
             [
                 "addDirection",
                 "Index",
-                "VerticalUp",
+                "DiagonalUpLeft",
                 1
             ],
             [
@@ -429,6 +421,12 @@ function number_gesture() {
                 1
             ],
             [
+                "addDirection",
+                "Middle",
+                "DiagonalUpLeft",
+                0.034482758620689655
+            ],
+            [
                 "addCurl",
                 "Ring",
                 "NoCurl",
@@ -437,20 +435,20 @@ function number_gesture() {
             [
                 "addDirection",
                 "Ring",
-                "DiagonalUpRight",
-                0.9090909090909091
-            ],
-            [
-                "addDirection",
-                "Ring",
                 "VerticalUp",
-                0.6363636363636364
+                1
             ],
             [
                 "addDirection",
                 "Ring",
-                "DiagonalUpLeft",
-                1
+                "DiagonalUpRight",
+                0.2
+            ],
+            [
+                "addCurl",
+                "Pinky",
+                "HalfCurl",
+                0.1111111111111111
             ],
             [
                 "addCurl",
@@ -459,28 +457,22 @@ function number_gesture() {
                 1
             ],
             [
-                "addCurl",
-                "Pinky",
-                "HalfCurl",
-                0.037037037037037035
-            ],
-            [
-                "addDirection",
-                "Pinky",
-                "DiagonalUpRight",
-                0.625
-            ],
-            [
-                "addDirection",
-                "Pinky",
-                "DiagonalUpLeft",
-                1
-            ],
-            [
                 "addDirection",
                 "Pinky",
                 "VerticalUp",
-                0.125
+                1
+            ],
+            [
+                "addDirection",
+                "Pinky",
+                "DiagonalUpLeft",
+                0.7272727272727273
+            ],
+            [
+                "addDirection",
+                "Pinky",
+                "DiagonalUpRight",
+                1
             ],
             [
                 "addDirection",
@@ -491,43 +483,37 @@ function number_gesture() {
             [
                 "addDirection",
                 "Thumb",
-                "HorizontalRight",
-                0.2727272727272727
-            ],
-            [
-                "addDirection",
-                "Thumb",
-                "DiagonalUpRight",
-                0.9090909090909091
+                "HorizontalLeft",
+                0.15
             ],
             [
                 "addDirection",
                 "Index",
                 "DiagonalUpRight",
-                0.4
-            ],
-            [
-                "addDirection",
-                "Ring",
-                "DiagonalUpLeft",
-                0.9090909090909091
-            ],
-            [
-                "addDirection",
-                "Ring",
-                "DiagonalUpRight",
                 1
             ],
             [
                 "addDirection",
-                "Pinky",
+                "Middle",
+                "DiagonalUpRight",
+                0.034482758620689655
+            ],
+            [
+                "addDirection",
+                "Ring",
                 "DiagonalUpLeft",
-                0.625
+                0.2
             ],
             [
                 "addDirection",
                 "Pinky",
                 "DiagonalUpRight",
+                0.7272727272727273
+            ],
+            [
+                "addDirection",
+                "Pinky",
+                "DiagonalUpLeft",
                 1
             ],
             [
@@ -1876,7 +1862,7 @@ async function overrideGetUserMedia() {
 
         var canvas = document.getElementById("realVideo");
         if (canvas) {
-            console.log('I\'m In!');
+            // console.log('I\'m In!');
             realVideoAdded(canvas);
             me.disconnect(); // stop observing
             return;
@@ -1892,7 +1878,7 @@ async function overrideGetUserMedia() {
 
 function realVideoAdded(video) {
     state.video = video;
-    console.log(video);
+    // console.log(video);
 
     video.onloadedmetadata = function () {
         //Set Width and Height
@@ -1930,30 +1916,35 @@ function loadHandGesture() {
             return
     }
 
-    if(state.handGesture === 'mouse'){
-        handsfree.use('pinchClick', ({hands}) => {
+    // Check on this, even not call this mouse still got the ppoint appear
+    if (state.handGesture === 'mouse') {
+        handsfree.use('pinchClick', ({ hands }) => {
             if (!hands.multiHandLandmarks) return
+
+            handsfree.enablePlugins('browser');
 
             hands.pointer.forEach((pointer, hand) => {
                 if (pointer.isVisible && hands.pinchState[hand][0] === 'start') {
-                const $el = document.elementFromPoint(pointer.x, pointer.y)
-                if ($el) {
-                    $el.dispatchEvent(
-                    new MouseEvent('click', {
-                        bubbles: true,
-                        cancelable: true,
-                        clientX: pointer.x,
-                        clientY: pointer.y
-                    })
-                    )
-            
-                    // Focus
-                    if (['INPUT', 'TEXTAREA', 'BUTTON', 'A'].includes($el.nodeName))
-                    $el.focus()
-                }
+                    const $el = document.elementFromPoint(pointer.x, pointer.y)
+                    if ($el) {
+                        $el.dispatchEvent(
+                            new MouseEvent('click', {
+                                bubbles: true,
+                                cancelable: true,
+                                clientX: pointer.x,
+                                clientY: pointer.y
+                            })
+                        )
+
+                        // Focus
+                        if (['INPUT', 'TEXTAREA', 'BUTTON', 'A'].includes($el.nodeName))
+                            $el.focus()
+                    }
                 }
             })
         })
+    } else {
+        handsfree.disablePlugins('browser');
     }
 }
 
@@ -1979,10 +1970,6 @@ function handPoseInRealTime() {
             if (Object.keys(handsfree.data).length !== 0) {
 
                 if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
-                    // console.log(handsfree);
-                    // console.log(handsfree.data.hands.multiHandedness[0].score);
-                    var hands = handsfree.data.hands.multiHandLandmarks[0];
-                    var landmarks = new Array();
 
                     const gesture = handsfree.model.hands.getGesture();
 
