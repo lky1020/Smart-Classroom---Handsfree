@@ -46,6 +46,20 @@
       "all_frames": true,
       "run_at": "document_end"
     },
+    {
+        "matches": ["*://*/*"],
+        "exclude_matches": ["*://localhost/*", "*://meet.google.com/*"],
+        "css": [
+          "/assets/js/handsfree/assets/handsfree.css"
+        ],
+        "js": [
+            "/src/content/browser-polyfill.js",
+          "/assets/js/handsfree/handsfree.js",
+          "/src/content/mouse.js"
+        ],
+        "all_frames": true,
+        "run_at": "document_end"
+      },
 
     {
       "matches": ["https://noisedeck.app/*"],

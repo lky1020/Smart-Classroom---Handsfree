@@ -1916,7 +1916,6 @@ function loadHandGesture() {
             return
     }
 
-    // Check on this, even not call this mouse still got the ppoint appear
     if (state.handGesture === 'mouse') {
         handsfree.use('pinchClick', ({ hands }) => {
             if (!hands.multiHandLandmarks) return
@@ -2045,6 +2044,13 @@ function handPoseInRealTime() {
                 }
             }
         }
+
+        ctx.beginPath();
+        ctx.save();
+
+        ctx.rect(100, 100, 1100, 550);
+        ctx.stroke();
+        ctx.restore();
 
         //Refresh
         requestAnimationFrame(handPoseFrame);

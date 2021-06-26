@@ -9148,6 +9148,17 @@
           hand = hands.multiHandedness[n].label === 'Right' ? 2 : 3;
         } // Update pointer position
 
+        if(hands.multiHandLandmarks[n][21].x > 0.420){
+            this.config.offset.x = -100;
+        }else{
+            this.config.offset.x = 100;
+        }
+
+        if(hands.multiHandLandmarks[n][21].y > 0.370){
+            this.config.offset.y = 0;
+        }else{
+            this.config.offset.y = -125;
+        }
 
         this.handsfree.TweenMax.to(this.tween[hand], 1, {
           x: window.outerWidth * this.config.speed.x - window.outerWidth * this.config.speed.x / 2 + window.outerWidth / 2 - hands.multiHandLandmarks[n][21].x * this.config.speed.x * window.outerWidth + this.config.offset.x,
