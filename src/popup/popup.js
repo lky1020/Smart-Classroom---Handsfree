@@ -29,7 +29,7 @@ $el.ckHand.addEventListener('click', () => {
 
     // Remove text when swicth go the previous one
     if ($el.ckHand.checked != previousCK) {
-        txtInfo.innerHTML = 'Please refresh Meet to apply change!';
+        txtInfo.innerHTML = 'Please refresh page if error occur!';
     }else{
         txtInfo.innerHTML = '';
     }
@@ -53,7 +53,12 @@ $el.ddlHandGesture.addEventListener('change', (event) => {
 
     // Remove text when swicth go the previous one
     if ($el.ddlHandGesture.value != previousddl) {
-        txtInfo.innerHTML = 'Please refresh Meet to apply change!';
+        if($el.ddlHandGesture.value != "mouse"){
+            txtInfo.innerHTML = 'Please refresh page if error occur!';
+        }else{
+            txtInfo.innerHTML = 'Please refresh page to apply mouse!';
+        }
+        
     }else{
         txtInfo.innerHTML = '';
     }
