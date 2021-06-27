@@ -11,6 +11,20 @@ const handsfree = new Handsfree({
 const numberGestureArr = ["One", "Two", "Three", "Four", "Five"];
 const signGestureArr = ["Help", "Thank_You", "Nice,I'm_Good", "No_Question", "Webcam_Microphone", "Stick_Captions"];
 
+document.onkeydown = keydown;
+
+function keydown(evt) {
+    if (!evt) {
+        evt = event;
+    }
+    if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 49) { // CTRL + Shift + 1
+        alert("CTRL + Shift + 1");
+    }
+    else if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 50) { // CTRL + Shift + 2
+        alert("CTRL + Shift + 1");
+    }
+}
+
 function number_gesture() {
     // One
     handsfree.useGesture({
@@ -1975,29 +1989,29 @@ function handPoseInRealTime() {
         ctx.drawImage(state.video, 0, 0);
 
         if (state.handModuleIsOn) {
-            
+
             // Change Gesture without refresh page 
-            if(state.handGesture === "number"){
-                
+            if (state.handGesture === "number") {
+
                 // Number
-                for(let i = 0; i < numberGestureArr.length; i++){
+                for (let i = 0; i < numberGestureArr.length; i++) {
                     handsfree.gesture[numberGestureArr[i]].enable()
                 }
 
                 // Sign
-                for(let i = 0; i < signGestureArr.length; i++){
+                for (let i = 0; i < signGestureArr.length; i++) {
                     handsfree.gesture[signGestureArr[i]].disable()
                 }
 
-            }else if(state.handGesture === "sign"){
-                
+            } else if (state.handGesture === "sign") {
+
                 // Number
-                for(let i = 0; i < numberGestureArr.length; i++){
+                for (let i = 0; i < numberGestureArr.length; i++) {
                     handsfree.gesture[numberGestureArr[i]].disable()
                 }
 
                 // Sign
-                for(let i = 0; i < signGestureArr.length; i++){
+                for (let i = 0; i < signGestureArr.length; i++) {
                     handsfree.gesture[signGestureArr[i]].enable()
                 }
             }
@@ -2018,22 +2032,22 @@ function handPoseInRealTime() {
 
                     }
 
-                    if(state.handGesture !== 'mouse'){
+                    if (state.handGesture !== 'mouse') {
                         if (handGesture.name !== "") {
                             ctx.beginPath();
                             ctx.save();
-    
+
                             ctx.font = "30px Arial";
                             ctx.fillStyle = "green";
                             ctx.translate(1250, 100);
                             ctx.scale(-1, 1);
                             ctx.fillText("Gesture: " + handGesture.name, 0, 0);
                             ctx.restore();
-    
+
                         } else {
                             ctx.beginPath();
                             ctx.save();
-    
+
                             ctx.font = "30px Arial";
                             ctx.fillStyle = "red";
                             ctx.translate(1250, 100);
@@ -2082,15 +2096,15 @@ function handPoseInRealTime() {
             }
         }
 
-        if(state.handGesture === 'mouse'){
+        if (state.handGesture === 'mouse') {
             ctx.beginPath();
             ctx.save();
-    
+
             ctx.rect(100, 100, 1100, 550);
             ctx.stroke();
             ctx.restore();
         }
-        
+
         //Refresh
         requestAnimationFrame(handPoseFrame);
     }
