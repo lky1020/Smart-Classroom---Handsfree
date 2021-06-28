@@ -72,6 +72,7 @@ $el.start.addEventListener('click', () => {
     chrome.storage.local.get(['hasCapturedStream'], (data) => {
         if (data.hasCapturedStream) {
             chrome.runtime.sendMessage({ action: 'handsfreeStart' })
+            chrome.storage.sync.set({ "handStatusDrawing": "display" });
             setHandsfreeState(true)
         } else {
             chrome.runtime.openOptionsPage()
@@ -86,6 +87,7 @@ $el.start.addEventListener('click', () => {
 $el.stop.addEventListener('click', () => {
     setHandsfreeState(false)
     chrome.runtime.sendMessage({ action: 'handsfreeStop' })
+    chrome.storage.sync.set({ "handStatusDrawing": "undisplay" });
     window.close()
 })
 
