@@ -30,18 +30,18 @@ $el.ckHand.addEventListener('click', () => {
     // Remove text when swicth go the previous one
     if ($el.ckHand.checked != previousCK) {
         txtInfo.innerHTML = 'Please refresh page if error occur!';
-    }else{
+    } else {
         txtInfo.innerHTML = '';
     }
-    
+
 })
 
 chrome.storage.sync.get(['handGesture'], (result) => {
     var handGesture = document.getElementById("ddlHandGesture");
-    
+
     // Load previous selected hand gesture
-    for(let i = 0; i < handGesture.options.length; i++){
-        if(handGesture.options[i].value === result.handGesture){
+    for (let i = 0; i < handGesture.options.length; i++) {
+        if (handGesture.options[i].value === result.handGesture) {
             handGesture.selectedIndex = i;
             previousddl = result.handGesture;
         }
@@ -49,18 +49,39 @@ chrome.storage.sync.get(['handGesture'], (result) => {
 });
 
 $el.ddlHandGesture.addEventListener('change', (event) => {
-    chrome.storage.sync.set({ "handGesture": event.target.value});
+    chrome.storage.sync.set({ "handGesture": event.target.value });
 
     // Remove text when swicth go the previous one
     if ($el.ddlHandGesture.value != previousddl) {
-        if($el.ddlHandGesture.value != "mouse"){
+        if ($el.ddlHandGesture.value != "mouse") {
             txtInfo.innerHTML = 'Please refresh page if error occur!';
-        }else{
+        } else {
             txtInfo.innerHTML = 'Please refresh page to apply mouse!';
         }
-        
-    }else{
+
+    } else {
         txtInfo.innerHTML = '';
+    }
+});
+
+// Listen to any changes on the storage
+chrome.storage.onChanged.addListener(function (changes, namespace) {
+    for (key in changes) {
+        var storageChange = changes[key];
+
+        // For the shortcut key (Mouse excluded)
+        if (key === "handGesture") {
+
+            var handGesture = document.getElementById("ddlHandGesture");
+
+            // Chnage the options based on the shortcut key
+            for (let i = 0; i < handGesture.options.length; i++) {
+                if (handGesture.options[i].value === storageChange.newValue) {
+                    handGesture.selectedIndex = i;
+                    previousddl = storageChange.newValue;
+                }
+            }
+        }
     }
 });
 
@@ -72,7 +93,7 @@ $el.start.addEventListener('click', () => {
     chrome.storage.local.get(['hasCapturedStream'], (data) => {
         if (data.hasCapturedStream) {
             chrome.runtime.sendMessage({ action: 'handsfreeStart' })
-            chrome.storage.sync.set({ "handStatusDrawing": "display" });
+            chrome.storage.sync.set({ "handStatusDrawing": "start" });
             setHandsfreeState(true)
         } else {
             chrome.runtime.openOptionsPage()
@@ -87,7 +108,7 @@ $el.start.addEventListener('click', () => {
 $el.stop.addEventListener('click', () => {
     setHandsfreeState(false)
     chrome.runtime.sendMessage({ action: 'handsfreeStop' })
-    chrome.storage.sync.set({ "handStatusDrawing": "undisplay" });
+    chrome.storage.sync.set({ "handStatusDrawing": "stop" });
     window.close()
 })
 

@@ -8,6 +8,14 @@ const handsfree = new Handsfree({
     }
 })
 
+const state = {
+    video: null,
+    canvas: null,
+    handModuleIsOn: true,
+    handGesture: null,
+    handStatusDrawing: null
+};
+
 const numberGestureArr = ["One", "Two", "Three", "Four", "Five"];
 const signGestureArr = ["Help", "Thank_You", "Nice,I'm_Good", "No_Question", "Webcam_Microphone", "Stick_Captions"];
 
@@ -17,11 +25,32 @@ function keydown(evt) {
     if (!evt) {
         evt = event;
     }
+
+    // Only available for number && sign (Mouse eexcluded)
     if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 49) { // CTRL + Shift + 1
-        alert("CTRL + Shift + 1");
+        if (state.handStatusDrawing === 'start') {
+
+            state.handGesture = "number";
+            chrome.storage.sync.set({ "handGesture": "number"});
+
+        } else {
+
+            alert("Please start the model first!");
+
+        }
+
     }
     else if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 50) { // CTRL + Shift + 2
-        alert("CTRL + Shift + 1");
+        if (state.handStatusDrawing === 'start') {
+
+            state.handGesture = "sign";
+            chrome.storage.sync.set({ "handGesture": "sign"});
+
+        } else {
+
+            alert("Please start the model first!");
+
+        }
     }
 }
 
@@ -1853,14 +1882,6 @@ chrome.runtime.onMessage.addListener(function (message) {
     }
 })
 
-const state = {
-    video: null,
-    canvas: null,
-    handModuleIsOn: true,
-    handGesture: null,
-    handStatusDrawing: null
-};
-
 async function overrideGetUserMedia() {
     //Create canvas use for replace the Google Meet Video
     var canvas = document.createElement("canvas");
@@ -2022,37 +2043,37 @@ function handPoseInRealTime() {
 
             if (Object.keys(handsfree.data).length !== 0) {
 
-                if(state.handStatusDrawing === 'display'){
+                if (state.handStatusDrawing === 'start') {
                     if (handsfree.data.hands.multiHandLandmarks !== undefined && handsfree.data.hands.multiHandedness != undefined) {
 
                         const gesture = handsfree.model.hands.getGesture();
-    
+
                         var handGesture;
-    
+
                         if (gesture[0] != null) {
                             handGesture = gesture[0];
-    
+
                         } else {
                             handGesture = gesture[1];
-    
+
                         }
-    
+
                         if (state.handGesture !== 'mouse') {
                             if (handGesture.name !== "") {
                                 ctx.beginPath();
                                 ctx.save();
-    
+
                                 ctx.font = "30px Arial";
                                 ctx.fillStyle = "green";
                                 ctx.translate(1250, 100);
                                 ctx.scale(-1, 1);
                                 ctx.fillText("Gesture: " + handGesture.name, 0, 0);
                                 ctx.restore();
-    
+
                             } else {
                                 ctx.beginPath();
                                 ctx.save();
-    
+
                                 ctx.font = "30px Arial";
                                 ctx.fillStyle = "red";
                                 ctx.translate(1250, 100);
@@ -2061,36 +2082,36 @@ function handPoseInRealTime() {
                                 ctx.restore();
                             }
                         }
-    
+
                         if (handsfree.data.hands.multiHandLandmarks) {
                             for (const landmarks of handsfree.data.hands.multiHandLandmarks) {
-    
+
                                 drawConnectors(ctx, landmarks, HAND_CONNECTIONS, {
                                     color: '#00FF00',
                                     lineWidth: 5
                                 });
-    
+
                                 drawLandmarks(ctx, landmarks, {
                                     color: '#FF0000',
                                     lineWidth: 2
                                 });
                             }
                         }
-    
+
                         ctx.beginPath();
                         ctx.save();
-    
+
                         ctx.font = "30px Arial";
                         ctx.fillStyle = "green";
                         ctx.translate(1250, 50);
                         ctx.scale(-1, 1);
                         ctx.fillText("Hand Detected!", 0, 0);
                         ctx.restore();
-    
+
                     } else {
                         ctx.beginPath();
                         ctx.save();
-    
+
                         ctx.font = "30px Arial";
                         ctx.fillStyle = "red";
                         ctx.translate(1250, 50);
