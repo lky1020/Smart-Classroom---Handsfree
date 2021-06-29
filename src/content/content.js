@@ -13,7 +13,8 @@ const state = {
     canvas: null,
     handModuleIsOn: true,
     handGesture: null,
-    handStatusDrawing: null
+    handStatusDrawing: null,
+    previousGesture: null // used to prevent gesture perfrom too many time
 };
 
 const numberGestureArr = ["One", "Two", "Three", "Four", "Five"];
@@ -31,20 +32,19 @@ function keydown(evt) {
         if (state.handStatusDrawing === 'start') {
 
             state.handGesture = "number";
-            chrome.storage.sync.set({ "handGesture": "number"});
+            chrome.storage.sync.set({ "handGesture": "number" });
 
         } else {
 
             alert("Please start the model first!");
 
         }
-
     }
     else if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 50) { // CTRL + Shift + 2
         if (state.handStatusDrawing === 'start') {
 
             state.handGesture = "sign";
-            chrome.storage.sync.set({ "handGesture": "sign"});
+            chrome.storage.sync.set({ "handGesture": "sign" });
 
         } else {
 
@@ -52,6 +52,10 @@ function keydown(evt) {
 
         }
     }
+}
+
+document.body.onkeypress = function (e) {
+    console.log(e);
 }
 
 function number_gesture() {
@@ -1996,6 +2000,51 @@ function loadHandGesture() {
     }
 }
 
+function handGestureAction(gestureName) {
+
+
+    if(gestureName !== state.previousGesture){
+
+        state.previousGesture = gestureName;
+        if (state.handGesture === 'number') {
+
+            // Delay first
+
+        } else if (state.handGesture === 'sign') {
+
+            switch (gestureName) {
+                case "Help":
+                    return
+
+                case "Thank_You":
+                    return
+
+                case "Nice,I'm_Good":
+                    return
+
+                case "No_Question":
+                    return
+
+                case "Webcam_Microphone":
+                    var btn = document.querySelectorAll('[jsname="BOHaEe"]');
+                    btn[0].click();
+                    btn[1].click();
+
+                    return
+
+                case "Stick_Captions":
+                    var cap = document.querySelector('[jsname="r8qRAd"]');
+                    if(cap !== null){
+                        cap.click();
+                    }
+                    
+                    return
+            }
+        }
+    }
+
+}
+
 function injectMediaSourceSwap() {
     // from https://stackoverflow.com/questions/9515704/insert-code-into-the-page-context-using-a-content-script
     var script = document.createElement("script");
@@ -2069,6 +2118,8 @@ function handPoseInRealTime() {
                                 ctx.scale(-1, 1);
                                 ctx.fillText("Gesture: " + handGesture.name, 0, 0);
                                 ctx.restore();
+
+                                handGestureAction(handGesture.name);
 
                             } else {
                                 ctx.beginPath();
