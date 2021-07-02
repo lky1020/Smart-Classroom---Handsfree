@@ -1894,6 +1894,13 @@ async function overrideGetUserMedia() {
     document.documentElement.appendChild(canvas);
     state.canvas = canvas;
 
+    //Create status box for display message
+    var statusBox = document.createElement("div");
+    statusBox.setAttribute("id", "statusBox");
+    statusBox.setAttribute("style", 
+    "width: 150px; height: 25px; background-color: red; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
+    document.body.appendChild(statusBox);
+
     //Get user video for replace the video in Google Meet
     injectMediaSourceSwap();
 
@@ -2014,6 +2021,10 @@ function handGestureAction(gestureName) {
 
             switch (gestureName) {
                 case "Help":
+                    var help = document.querySelector('[jsname="SqzZRd"]');
+                    if(help != null){
+                        help.click();
+                    }
                     return
 
                 case "Thank_You":
@@ -2026,9 +2037,9 @@ function handGestureAction(gestureName) {
                     return
 
                 case "Webcam_Microphone":
-                    var btn = document.querySelectorAll('[jsname="BOHaEe"]');
-                    btn[0].click();
-                    btn[1].click();
+                    var webcam_microphone = document.querySelectorAll('[jsname="BOHaEe"]');
+                    webcam_microphone[0].click();
+                    webcam_microphone[1].click();
 
                     return
 
