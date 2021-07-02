@@ -2159,6 +2159,7 @@ function handPoseInRealTime() {
                                 state.statusBox.innerHTML = "Gesture: " + handGesture.name;
 
                             } else {
+                                state.previousGesture = "undefined";
                                 state.statusBox.innerHTML = "Gesture: Undefined";
 
                             }
