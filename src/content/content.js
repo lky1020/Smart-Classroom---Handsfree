@@ -1898,8 +1898,8 @@ async function overrideGetUserMedia() {
     //Create status box for display message
     var statusBox = document.createElement("div");
     statusBox.setAttribute("id", "statusBox");
-    statusBox.setAttribute("style", 
-    "width: 175px; height: 25px; color: white; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
+    statusBox.setAttribute("style",
+        "width: 175px; height: 25px; color: white; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
     document.body.appendChild(statusBox);
     state.statusBox = statusBox;
 
@@ -2011,10 +2011,42 @@ function loadHandGesture() {
 
 function handGestureAction(gestureName) {
 
-
-    if(gestureName !== state.previousGesture){
+    if (gestureName !== state.previousGesture) {
 
         state.previousGesture = gestureName;
+
+        // Index 2 == meet chatbox
+        var chatbox = document.querySelectorAll('[jsname="A5il2e"]');
+
+        if (chatbox.length != 0) {
+
+            if (chatbox[2].ariaPressed === "false") {
+                chatbox[2].click();
+
+                // Wait for Google Meet to open the Chat Box
+                var delayInMilliseconds = 500; //0.5 second
+
+                setTimeout(function () {
+                    var textarea = document.getElementsByTagName("textarea");;
+
+                    if (textarea != null) {
+                        console.log(textarea[0]);
+                        textarea[0].click();
+                        textarea[0].value = 'ChatBot: ' + gestureName;
+                        var chatBtn = document.querySelector('[jsname="ksKsZd"]');
+                        // console.log(chatBtn);
+                        // Maybe consider directly keydown Enter key
+                        if (chatBtn !== null) {
+                            chatBtn.click();
+                        }
+
+                        // chatbox[2].click();
+                    }
+                }, delayInMilliseconds);
+
+            }
+        }
+
         if (state.handGesture === 'number') {
 
             // Delay first
@@ -2024,7 +2056,7 @@ function handGestureAction(gestureName) {
             switch (gestureName) {
                 case "Help":
                     var help = document.querySelector('[jsname="SqzZRd"]');
-                    if(help != null){
+                    if (help != null) {
                         help.click();
                     }
                     return
@@ -2047,10 +2079,10 @@ function handGestureAction(gestureName) {
 
                 case "Stick_Captions":
                     var cap = document.querySelector('[jsname="r8qRAd"]');
-                    if(cap !== null){
+                    if (cap !== null) {
                         cap.click();
                     }
-                    
+
                     return
             }
         }
@@ -2122,6 +2154,8 @@ function handPoseInRealTime() {
 
                         if (state.handGesture !== 'mouse') {
                             if (handGesture.name !== "") {
+
+                                handGestureAction(handGesture.name);
                                 state.statusBox.innerHTML = "Gesture: " + handGesture.name;
 
                             } else {
