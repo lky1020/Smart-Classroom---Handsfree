@@ -11,6 +11,7 @@ const handsfree = new Handsfree({
 const state = {
     video: null,
     canvas: null,
+    statusBox: null,
     handModuleIsOn: true,
     handGesture: null,
     handStatusDrawing: null,
@@ -1898,8 +1899,9 @@ async function overrideGetUserMedia() {
     var statusBox = document.createElement("div");
     statusBox.setAttribute("id", "statusBox");
     statusBox.setAttribute("style", 
-    "width: 150px; height: 25px; background-color: red; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
+    "width: 175px; height: 25px; color: white; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
     document.body.appendChild(statusBox);
+    state.statusBox = statusBox;
 
     //Get user video for replace the video in Google Meet
     injectMediaSourceSwap();
@@ -2120,28 +2122,11 @@ function handPoseInRealTime() {
 
                         if (state.handGesture !== 'mouse') {
                             if (handGesture.name !== "") {
-                                ctx.beginPath();
-                                ctx.save();
-
-                                ctx.font = "30px Arial";
-                                ctx.fillStyle = "green";
-                                ctx.translate(1250, 100);
-                                ctx.scale(-1, 1);
-                                ctx.fillText("Gesture: " + handGesture.name, 0, 0);
-                                ctx.restore();
-
-                                handGestureAction(handGesture.name);
+                                state.statusBox.innerHTML = "Gesture: " + handGesture.name;
 
                             } else {
-                                ctx.beginPath();
-                                ctx.save();
+                                state.statusBox.innerHTML = "Gesture: Undefined";
 
-                                ctx.font = "30px Arial";
-                                ctx.fillStyle = "red";
-                                ctx.translate(1250, 100);
-                                ctx.scale(-1, 1);
-                                ctx.fillText("Gesture: Undefined", 0, 0);
-                                ctx.restore();
                             }
                         }
 
@@ -2160,26 +2145,8 @@ function handPoseInRealTime() {
                             }
                         }
 
-                        ctx.beginPath();
-                        ctx.save();
-
-                        ctx.font = "30px Arial";
-                        ctx.fillStyle = "green";
-                        ctx.translate(1250, 50);
-                        ctx.scale(-1, 1);
-                        ctx.fillText("Hand Detected!", 0, 0);
-                        ctx.restore();
-
                     } else {
-                        ctx.beginPath();
-                        ctx.save();
-
-                        ctx.font = "30px Arial";
-                        ctx.fillStyle = "red";
-                        ctx.translate(1250, 50);
-                        ctx.scale(-1, 1);
-                        ctx.fillText("Finding Hands...", 0, 0);
-                        ctx.restore();
+                        state.statusBox.innerHTML = "Finding Hands...";
                     }
                 }
             }
