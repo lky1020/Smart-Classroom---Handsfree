@@ -13,6 +13,8 @@ const state = {
     canvas: null,
     username: null,
     statusBox: null,
+    chatbotText: null,
+    chatbotEnable: false,
     handModuleIsOn: true,
     handGesture: null,
     handStatusDrawing: null,
@@ -52,6 +54,15 @@ function keydown(evt) {
 
             alert("Please start the model first!");
 
+        }
+    }else if(evt.keyCode == 32){
+
+        if(evt.path[0].tagName === "TEXTAREA"){
+            if(evt.path[0].value.trim().length === 0){
+                state.chatbotEnable = true;
+            }
+        }else{
+            state.chatbotEnable = true;
         }
     }
 }
@@ -2016,82 +2027,107 @@ function handGestureAction(gestureName) {
 
         state.previousGesture = gestureName;
 
-        // Index 2 == meet chatbox
-        var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
+            state.chatbotText = gestureName;
 
-        if (meetTool.length != 0 && state.username != null) {
+        switch (gestureName) {
+            case "One":
+                state.chatbotText = "chosen first options!";
+                return
 
-            if (meetTool[2].ariaPressed === "false") {
-                meetTool[2].click();
-            }
+            case "Two":
+                state.chatbotText = "chosen second options!";
+                return
 
-            // Wait for Google Meet to open the Chat Box
-            var delayInMilliseconds = 500; //0.5 second
+            case "Three":
+                state.chatbotText = "chosen third options!";
+                return
 
-            setTimeout(function () {
-                var textarea = document.getElementsByTagName("textarea");;
+            case "Four":
+                state.chatbotText = "chosen forth options!";
+                return
 
-                if (textarea != null) {
-                    console.log(textarea[0]);
-                    textarea[0].click();
-                    textarea[0].value = 'ChatBot: \n' + state.username + ' is requesting ' + gestureName;
+            case "Five":
+                state.chatbotText = "chosen fifth options!";
+                return
 
-                    const keyboardEvent = new KeyboardEvent('keydown', {
-                        code: 'Enter',
-                        key: 'Enter',
-                        charCode: 13,
-                        keyCode: 13,
-                        view: window,
-                        bubbles: true,
-                    });
-
-                    textarea[0].dispatchEvent(keyboardEvent);
-
+            case "Help":
+                var help = document.querySelector('[jsname="SqzZRd"]');
+                if (help != null) {
+                    help.click();
                 }
-            }, delayInMilliseconds);
-        }
 
-        if (state.handGesture === 'number') {
+                state.chatbotText = "";
+                return
 
-            // Delay first
+            case "Thank_You":
+                state.chatbotText = "saying Thank You!"
+                return
 
-        } else if (state.handGesture === 'sign') {
+            case "Nice,I'm_Good":
+                state.chatbotText = "currently nice and good!"
+                return
 
-            switch (gestureName) {
-                case "Help":
-                    var help = document.querySelector('[jsname="SqzZRd"]');
-                    if (help != null) {
-                        help.click();
-                    }
-                    return
+            case "No_Question":
+                state.chatbotText = "no question for now!"
+                return
 
-                case "Thank_You":
-                    return
+            case "Webcam_Microphone":
+                var webcam_microphone = document.querySelectorAll('[jsname="BOHaEe"]');
+                webcam_microphone[0].click();
+                webcam_microphone[1].click();
 
-                case "Nice,I'm_Good":
-                    return
+                state.chatbotText = "";
+                return
 
-                case "No_Question":
-                    return
+            case "Stick_Captions":
+                var cap = document.querySelector('[jsname="r8qRAd"]');
+                if (cap !== null) {
+                    cap.click();
+                }
 
-                case "Webcam_Microphone":
-                    var webcam_microphone = document.querySelectorAll('[jsname="BOHaEe"]');
-                    webcam_microphone[0].click();
-                    webcam_microphone[1].click();
-
-                    return
-
-                case "Stick_Captions":
-                    var cap = document.querySelector('[jsname="r8qRAd"]');
-                    if (cap !== null) {
-                        cap.click();
-                    }
-
-                    return
-            }
+                state.chatbotText = "";
+                return
         }
     }
 
+}
+
+function handGestureChatBox(gestureName){
+     // Index 2 == meet chatbox
+     var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
+
+     if (meetTool.length != 0 && state.username != null) {
+
+         if (meetTool[2].ariaPressed === "false") {
+             meetTool[2].click();
+         }
+
+         // Wait for Google Meet to open the Chat Box
+         var delayInMilliseconds = 500; //0.5 second
+
+         setTimeout(function () {
+             var textarea = document.getElementsByTagName("textarea");;
+
+             if (textarea != null && state.chatbotText != "") {
+                 console.log(textarea[0]);
+                 textarea[0].click();
+                 textarea[0].value = 'ChatBot: \n' + state.username + ' ' + state.chatbotText;
+
+                 const keyboardEvent = new KeyboardEvent('keydown', {
+                     code: 'Enter',
+                     key: 'Enter',
+                     charCode: 13,
+                     keyCode: 13,
+                     view: window,
+                     bubbles: true,
+                 });
+
+                 textarea[0].dispatchEvent(keyboardEvent);
+
+
+             }
+         }, delayInMilliseconds);
+     }
 }
 
 function injectMediaSourceSwap() {
@@ -2127,10 +2163,10 @@ function handPoseInRealTime() {
                     var delayInMilliseconds = 500; //0.5 second
     
                     setTimeout(function () {
-    
-                        var username = document.getElementsByClassName("kvLJWc")[0].getElementsByTagName("span")[0].innerHTML;
-                        state.username = username;
-                        
+                        if(document.getElementsByClassName("kvLJWc")[0] != null){
+                            var username = document.getElementsByClassName("kvLJWc")[0].getElementsByTagName("span")[0].innerHTML;
+                            state.username = username;
+                        }
                     }, delayInMilliseconds);
                 }
             }else{
@@ -2189,6 +2225,12 @@ function handPoseInRealTime() {
                             if (handGesture.name !== "") {
 
                                 handGestureAction(handGesture.name);
+
+                                if(state.chatbotText != null && state.chatbotEnable == true){
+                                    handGestureChatBox(handGesture.name);
+                                    state.chatbotEnable = false;
+                                }
+
                                 state.statusBox.innerHTML = "Gesture: " + handGesture.name;
 
                             } else {
