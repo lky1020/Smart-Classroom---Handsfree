@@ -11,6 +11,7 @@ const handsfree = new Handsfree({
 const state = {
     video: null,
     canvas: null,
+    username: null,
     statusBox: null,
     handModuleIsOn: true,
     handGesture: null,
@@ -2016,35 +2017,38 @@ function handGestureAction(gestureName) {
         state.previousGesture = gestureName;
 
         // Index 2 == meet chatbox
-        var chatbox = document.querySelectorAll('[jsname="A5il2e"]');
+        var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
 
-        if (chatbox.length != 0) {
+        if (meetTool.length != 0 && state.username != null) {
 
-            if (chatbox[2].ariaPressed === "false") {
-                chatbox[2].click();
-
-                // Wait for Google Meet to open the Chat Box
-                var delayInMilliseconds = 500; //0.5 second
-
-                setTimeout(function () {
-                    var textarea = document.getElementsByTagName("textarea");;
-
-                    if (textarea != null) {
-                        console.log(textarea[0]);
-                        textarea[0].click();
-                        textarea[0].value = 'ChatBot: ' + gestureName;
-                        var chatBtn = document.querySelector('[jsname="ksKsZd"]');
-                        // console.log(chatBtn);
-                        // Maybe consider directly keydown Enter key
-                        if (chatBtn !== null) {
-                            chatBtn.click();
-                        }
-
-                        // chatbox[2].click();
-                    }
-                }, delayInMilliseconds);
-
+            if (meetTool[2].ariaPressed === "false") {
+                meetTool[2].click();
             }
+
+            // Wait for Google Meet to open the Chat Box
+            var delayInMilliseconds = 500; //0.5 second
+
+            setTimeout(function () {
+                var textarea = document.getElementsByTagName("textarea");;
+
+                if (textarea != null) {
+                    console.log(textarea[0]);
+                    textarea[0].click();
+                    textarea[0].value = 'ChatBot: \n' + state.username + ' is requesting ' + gestureName;
+
+                    const keyboardEvent = new KeyboardEvent('keydown', {
+                        code: 'Enter',
+                        key: 'Enter',
+                        charCode: 13,
+                        keyCode: 13,
+                        view: window,
+                        bubbles: true,
+                    });
+
+                    textarea[0].dispatchEvent(keyboardEvent);
+
+                }
+            }, delayInMilliseconds);
         }
 
         if (state.handGesture === 'number') {
@@ -2101,12 +2105,41 @@ function injectMediaSourceSwap() {
 }
 
 function handPoseInRealTime() {
+
+    let prevTime = Date.now(), frames = 0;
+
     async function handPoseFrame() {
 
         var ctx = state.canvas.getContext("2d");
         ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
         ctx.drawImage(state.video, 0, 0);
 
+
+        // Need to open Google Meet People Tool to get current username
+        var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
+
+        if(meetTool.length != 0){
+
+            if (state.username == null) {
+                if (meetTool[1].ariaPressed === "false") {
+                    meetTool[1].click();
+    
+                    var delayInMilliseconds = 500; //0.5 second
+    
+                    setTimeout(function () {
+    
+                        var username = document.getElementsByClassName("kvLJWc")[0].getElementsByTagName("span")[0].innerHTML;
+                        state.username = username;
+                        
+                    }, delayInMilliseconds);
+                }
+            }else{
+                if (meetTool[1].ariaPressed === "true") {
+                    meetTool[1].click();
+                }
+            }
+        }
+        
         if (state.handModuleIsOn) {
 
             // Change Gesture without refresh page 
@@ -2183,6 +2216,18 @@ function handPoseInRealTime() {
                     } else {
                         state.statusBox.innerHTML = "Finding Hands...";
                     }
+
+                    const time = Date.now();
+                    frames++;
+                    if (time > prevTime + 1000) {
+                        let fps = Math.round( ( frames * 1000 ) / ( time - prevTime ) );
+                        prevTime = time;
+                        frames = 0;
+
+                        console.info('FPS: ', fps);
+                    }
+                }else{
+                    state.statusBox.innerHTML = "";
                 }
             }
         }
