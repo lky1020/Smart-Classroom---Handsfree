@@ -965,7 +965,7 @@
                 return;
             } // Load hands
 
-
+            var startTime = new Date();
             this.loadDependency(`${this.handsfree.config.assetsPath}/@mediapipe/hands/hands.js`, () => {
                 // Configure model
                 this.api = new window.Hands({
@@ -973,6 +973,11 @@
                         return `${this.handsfree.config.assetsPath}/@mediapipe/hands/${file}`;
                     }
                 });
+
+                var endTime = new Date();
+                var timeDiff = endTime - startTime; //in ms
+                console.log(timeDiff + " ms");
+
                 this.api.setOptions(this.handsfree.config.hands);
                 this.api.onResults(results => this.dataReceived(results)); // Load the media stream
 
