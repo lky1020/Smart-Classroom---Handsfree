@@ -2166,12 +2166,13 @@ function handPoseInRealTime() {
                         if(document.getElementsByClassName("kvLJWc")[0] != null){
                             var username = document.getElementsByClassName("kvLJWc")[0].getElementsByTagName("span")[0].innerHTML;
                             state.username = username;
+
+                            // Delay for 250 ms to let Google Meet able respond to this click()
+                            setTimeout(function () {
+                                meetTool[1].click();
+                            }, 250);
                         }
                     }, delayInMilliseconds);
-                }
-            }else{
-                if (meetTool[1].ariaPressed === "true") {
-                    meetTool[1].click();
                 }
             }
         }
@@ -2236,7 +2237,7 @@ function handPoseInRealTime() {
                             } else {
                                 state.previousGesture = "undefined";
                                 state.statusBox.innerHTML = "Gesture: Undefined";
-
+                                state.chatbotEnable = false;
                             }
                         }
 
