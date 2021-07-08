@@ -1958,6 +1958,16 @@ function realVideoAdded(video) {
 }
 
 async function start() {
+
+    var data = {
+        title: "Testing",
+        url: window.location.href,
+    }
+
+    chrome.runtime.sendMessage(data, function(response) {
+        console.log('response', response);
+    });
+
     await loadState();
     loadHandGesture();
     overrideGetUserMedia();

@@ -7,16 +7,24 @@
         "*://*/*",
         "storage",
         "tabs",
-        "activeTab"
+        "activeTab",
+        "identity"
     ],
-    "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'",
+    "oauth2": {
+        "client_id": "399474111934-s1st97qpbljqf8484hufmai159qfq8pk.apps.googleusercontent.com",
+        "scopes": [
+            "https://www.googleapis.com/auth/spreadsheets"
+        ]
+    },
+    "content_security_policy": "script-src 'self' https://apis.google.com/ 'unsafe-eval'; object-src 'self'",
     "options_page": "/src/options/stream-capture.html",
     "devtools_page": "/src/devtools/index.html",
     "background": {
         "scripts": [
             "/assets/js/handsfree/handsfree.js",
             "/src/background/handsfree.js",
-            "/src/background/webxr.js"
+            "/src/background/webxr.js",
+            "/src/background/background.js"
         ],
         "persistent": false
     },
@@ -117,5 +125,6 @@
         "32": "/assets/favicon.png",
         "48": "/assets/favicon.png",
         "128": "/assets/favicon.png"
-    }
+    },
+    "key": "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAyW+Y7qs1IUMVuRpAemvYT4MgTCaUaV5y+Ae6lTZMnox33HkwEiW+ncbqWgsedNfNW0aW5DN49Wzmz+/xrwZc0WFn9i6U489o/rGXvBszcMn+lM68eR5fLKnyoVQ6sxiM4Cmj9AO0O82/6lc8WyUCUHvuW2tYE6cTmPE1+2FSinzXF2XbR6W5cgFvlWCqCVo1vi5NDvW1nwQJHI/6zPYwS7opXDNQouHMDRGt2DWiz4mEN/N8JSBPgVDHznNKPJfaNYYsan3v8+Zio/xjWhmJSM71ljatt21FZ1Rjdn0a1qqzIZ0pZ9g4AIRebwe66SzLnXdMxgLu04B0ZneTcdk+5QIDAQAB"
 }
