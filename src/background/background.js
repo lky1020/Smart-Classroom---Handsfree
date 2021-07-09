@@ -54,7 +54,7 @@ chrome.extension.onMessage.addListener(
             });
 
             // To prevent model start also append to Google Sheet
-            if (request.name !== undefined && request.gesture !== undefined){
+            if (request.name !== undefined && request.gesture !== undefined) {
                 const body = {
                     values: [[
                         request.name,
@@ -62,7 +62,7 @@ chrome.extension.onMessage.addListener(
                         new Date() // Timestamp
                     ]]
                 };
-    
+                
                 // Append values to the spreadsheet
                 gapi.client.sheets.spreadsheets.values.append({
                     spreadsheetId: SPREADSHEET_ID,
@@ -73,6 +73,9 @@ chrome.extension.onMessage.addListener(
                     // On success
                     console.log(`${response.result.updates.updatedCells} cells appended.`)
                     sendResponse({ success: true });
+                }, function(error) {
+                    var status = error.result.error.status;
+                    alert('Error occur in Google SpreadSheet: ' + status + '\nPlease contact TARUC Management');
                 });
             }
         })
