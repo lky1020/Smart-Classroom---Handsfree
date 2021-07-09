@@ -53,25 +53,28 @@ chrome.extension.onMessage.addListener(
                 'access_token': token,
             });
 
-            const body = {
-                values: [[
-                    new Date(), // Timestamp
-                    request.title, // Page title
-                    request.url, // Page URl
-                ]]
-            };
-
-            // Append values to the spreadsheet
-            gapi.client.sheets.spreadsheets.values.append({
-                spreadsheetId: SPREADSHEET_ID,
-                range: SPREADSHEET_TAB_NAME,
-                valueInputOption: 'USER_ENTERED',
-                resource: body
-            }).then((response) => {
-                // On success
-                console.log(`${response.result.updates.updatedCells} cells appended.`)
-                sendResponse({ success: true });
-            });
+            // To prevent model start also append to Google Sheet
+            if (request.name !== undefined && request.gesture !== undefined){
+                const body = {
+                    values: [[
+                        request.name,
+                        request.gesture,
+                        new Date() // Timestamp
+                    ]]
+                };
+    
+                // Append values to the spreadsheet
+                gapi.client.sheets.spreadsheets.values.append({
+                    spreadsheetId: SPREADSHEET_ID,
+                    range: SPREADSHEET_TAB_NAME,
+                    valueInputOption: 'USER_ENTERED',
+                    resource: body
+                }).then((response) => {
+                    // On success
+                    console.log(`${response.result.updates.updatedCells} cells appended.`)
+                    sendResponse({ success: true });
+                });
+            }
         })
 
         // Wait for response

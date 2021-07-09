@@ -1958,16 +1958,6 @@ function realVideoAdded(video) {
 }
 
 async function start() {
-
-    var data = {
-        title: "Testing",
-        url: window.location.href,
-    }
-
-    chrome.runtime.sendMessage(data, function(response) {
-        console.log('response', response);
-    });
-
     await loadState();
     loadHandGesture();
     overrideGetUserMedia();
@@ -2036,8 +2026,6 @@ function handGestureAction(gestureName) {
     if (gestureName !== state.previousGesture) {
 
         state.previousGesture = gestureName;
-
-            state.chatbotText = gestureName;
 
         switch (gestureName) {
             case "One":
@@ -2134,6 +2122,12 @@ function handGestureChatBox(gestureName){
 
                  textarea[0].dispatchEvent(keyboardEvent);
 
+                 var data = {
+                    name: state.username,
+                    gesture: gestureName,
+                }
+
+                chrome.runtime.sendMessage(data);
 
              }
          }, delayInMilliseconds);
