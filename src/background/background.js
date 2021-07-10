@@ -1,4 +1,5 @@
 var head = document.getElementsByTagName('head')[0];
+
 var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = "https://apis.google.com/js/client.js?onload=onGAPILoad";
@@ -8,12 +9,75 @@ chrome.identity.getAuthToken({ interactive: true }, function (token) {
     console.log('got the token', token);
 })
 
+function postJWT(jwt, callback) {
+    var xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (this.readyState == 4) {
+            if (this.status == 200 && callback) {
+                callback(this.responseText);
+                return;
+            }
+            if (console) console.log(this.responseText);
+        }
+    };
+    var parameters = "grant_type=" + encodeURIComponent("urn:ietf:params:oauth:grant-type:jwt-bearer") + "&assertion=" + encodeURIComponent(jwt);
+    xhttp.open("POST", "https://www.googleapis.com/oauth2/v4/token", true);
+    xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    xhttp.send(parameters);
+}
+
+function getCert() {
+    var cert = //your json key (downloaded earlier) goes here
+    {
+        "type": "service_account",
+        "project_id": "smartclassroom-319211",
+        "private_key_id": "9c12436e8fc9a61763415a73684b5859c8cf5f45",
+        "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDlV2yr4qPkuBTh\n8qHB1wwhF2ClnOuZEMqLDyAO7IBEI6FCsovCRQxoQJiXYpnmrv2O/hWzg8VbJYgy\nyPxtqeJk+lBsV433PAeAH6rH6YDGUhZQTL344TuJLEVAbn+oekwkDHzDITkyXAqy\nRPpGTvlhwlOfGQid7F9TyFJ3vEzGNWuKRB7tttT/JW2ek54KfXZzV4R5MoeKDsb3\nZiAuYsP1tJNducqbH3Q+mBeKyQgNpYW90CWy5ECytKLsVa2h3zklg4dqJiFgX+e0\nyXgZmkY3EvbwVgytY9uDPm2BB/ESJD6fPhMHGGqIFgfAyr7LdHYK36j/02Oh9JsL\n//nFnxlnAgMBAAECggEAB1HSp8BpsgYSBzgYOOM6gYqJIiAFAPNL6O5IUVGeXQ5f\nZOKP8AOw0Vmmb8Z3hP5MHME37hfO4l7V9FD9MCl+OUd9Q51JFv1Ke/4GvwSmgIM5\nhRc975s4rDhxKWJIHsIbJgIOr/z3zLIAAWU5hlRE71LQGmwmc0E1CwEsvfeQ4mPd\n8uwy6OvisDEQDEa898qm3o26w0W5zDxZn8IL0PLXImB/bavf6x67Ye6dig+v5Onr\nUqBQ6pC3RARgXET+OumtKCp5fcpDxYZrqwT9IUgCxVX2G7o38GN7uPTJqqYuebq9\nzdPzi29nL22uhNyM1lzxqIhTDlTokUv4kgvhBlayYQKBgQDy1xgI43hvl+oY/EqS\nbvpJtpRlNIsD7/5wPvXgjLD6UPeheC90kGHUrbNsj02Jl9RGhyZcbUhJbI3i6ZM6\nfIvNSt9HJWTZzTJT5DPxhyPI8O9a8T4QsBTCx+vK6MOEPbJtYzTF3CHMYilYhvv8\nI9y6JA+gmWaqk+3Gj0eTMPaAkQKBgQDxxRBdYQC34ozapphdgOC4+L3m9+WEQl+V\nVJFDtkHfMsv7YbBTzHyc/wELq2lN1qaqulvWtWWQS3U82gBHA+JIgKXsxBIm1z6Q\n57eSnWuCNXH3a16FpS1NodgLzA6ZTyz39m0V7CSFFCdGbxRv+Fs6zY+/IVwr9Eyw\nvz7mKp72dwKBgQCbLojVZUdZSKL4RIEDApg+8sXxxpnvcjYOVK2bSUzvKT6VmM/6\nlSlvV3EJNqo9+yBT0ZnaBpvjD9O75beH8H8GOYplVKgV5uL6aSIofkuH5S+P1gnr\ncBpUPp2XlRccMrEK5hKbPgj7Kt9xCxGMFv6+lLzHzD+nUdDoyjbbALcFgQKBgFpH\nU80Ko9IGbsJW4x5HOaLYf1D30GSKxFZmtberHv3RYgoEeGtSOFYHgsRwxWmjdaja\n3eBW7A3tn2GRpfjeomigYVUAAicuyNYjMJE25yY//sZ8+Va+TyRmAt6k2+6zef89\nrY46F4j59ZB/ego1mxtiFwMv2dMv7lMxlrMrxyARAoGBAJjdWGbDCWjt+xdq7R9d\n0hPOsJWFl+jJUzb1CoE8R/Y9Zc9ISjElj2keGoGz0lWsinpYXXXOP9eBpJHlDOT5\nO74lihRnRa8BUuokys5ZLKdJogZi4U4DQosYJ02byHqlIawXgdgkA3997bz6xKv7\no2En9Gzuvrl7RG/LUx8+03Hy\n-----END PRIVATE KEY-----\n",
+        "client_email": "user-644@smartclassroom-319211.iam.gserviceaccount.com",
+        "client_id": "103304609163647483410",
+        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/user-644%40smartclassroom-319211.iam.gserviceaccount.com"
+    }
+
+    return cert;
+}
+
+function getJWT() {
+    var cert = getCert();
+    var key = KEYUTIL.getKey(cert.private_key);
+    var headers = { "alg": "RS256", "typ": "JWT" };
+    var issued = Math.floor(new Date().getTime() / 1000);
+
+    var claims = {
+        "iss": cert.client_email,
+        "scope": "https://www.googleapis.com/auth/spreadsheets",
+        "aud": "https://www.googleapis.com/oauth2/v4/token",
+        "exp": issued + 3600,
+        "iat": issued
+    };
+
+    var jwt = KJUR.jws.JWS.sign(headers.alg, headers, JSON.stringify(claims), key);
+    return jwt;
+}
+
+let clientToken;
+
+postJWT(getJWT(), function (response) {
+    clientToken = JSON.parse(response).access_token;
+    //Do your api calls here using the token. 
+    //Reuse the token for up to 1 hour.
+});
+
 const API_KEY = 'AIzaSyADyoalWfI5ZIDSjvXE7lyZunZNPdIka1s';
 const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 const SPREADSHEET_ID = '1uzCzvLpFu9xeDTvPsot8AS-UmbaabsO4pf6sGDqsP-k';
 const SPREADSHEET_TAB_NAME = 'main';
 
 function onGAPILoad() {
+
+
     gapi.client.init({
         // Don't pass client nor scope as these will init auth2, which we don't want
         apiKey: API_KEY,
@@ -22,10 +86,11 @@ function onGAPILoad() {
     }).then(function () {
         console.log('gapi initialized')
 
-        chrome.identity.getAuthToken({ interactive: true }, function (token) {
+        // User need to authorize their own account first to use the service account
+        chrome.identity.getAuthToken({ interactive: true }, async function (token) {
 
             gapi.auth.setToken({
-                'access_token': token,
+                'access_token': clientToken,
             });
 
             gapi.client.sheets.spreadsheets.values.get({
@@ -36,21 +101,22 @@ function onGAPILoad() {
                 console.log(`Got ${response.result.values.length} rows back`)
 
             });
+
         })
 
     }, function (error) {
         console.log('error', error)
-
     });
 }
 
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
-        // Get the token
+
+        // User need to authorize their own account first to use the service account
         chrome.identity.getAuthToken({ interactive: true }, function (token) {
             // Set GAPI auth token
             gapi.auth.setToken({
-                'access_token': token,
+                'access_token': clientToken,
             });
 
             // To prevent model start also append to Google Sheet
@@ -62,7 +128,15 @@ chrome.extension.onMessage.addListener(
                         new Date() // Timestamp
                     ]]
                 };
-                
+
+                // gapi.client.sheets.spreadsheets.create({
+                //     properties: {
+                //         title: 'Hihidwadaw'
+                //     }
+                // }).then((response) => {
+                //     console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
+                // });
+
                 // Append values to the spreadsheet
                 gapi.client.sheets.spreadsheets.values.append({
                     spreadsheetId: SPREADSHEET_ID,
@@ -73,9 +147,12 @@ chrome.extension.onMessage.addListener(
                     // On success
                     console.log(`${response.result.updates.updatedCells} cells appended.`)
                     sendResponse({ success: true });
-                }, function(error) {
+
+                }, function (error) {
+
                     var status = error.result.error.status;
                     alert('Error occur in Google SpreadSheet: ' + status + '\nPlease contact TARUC Management');
+
                 });
             }
         })

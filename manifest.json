@@ -24,6 +24,7 @@
             "/assets/js/handsfree/handsfree.js",
             "/src/background/handsfree.js",
             "/src/background/webxr.js",
+            "src/background/jsrsasign-all-min.js",
             "/src/background/background.js"
         ],
         "persistent": false
