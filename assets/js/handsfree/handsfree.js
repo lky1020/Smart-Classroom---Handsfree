@@ -975,6 +975,8 @@
                 });
 
                 var endTime = new Date();
+                console.log(startTime.getHours() + ':' + startTime.getMinutes() + ':' + startTime.getSeconds() + '.' + String(startTime.getMilliseconds()).padStart(3, '0'));
+                console.log(endTime.getHours() + ':' + endTime.getMinutes() + ':' + endTime.getSeconds() + '.' + String(endTime.getMilliseconds()).padStart(3, '0'));
                 var timeDiff = endTime - startTime; //in ms
                 console.log(timeDiff + " ms");
 
