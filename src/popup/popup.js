@@ -3,12 +3,22 @@ const $el = {
     stop: document.querySelector('#handsfree-stop'),
     status: document.querySelector('#status'),
     ckHand: document.querySelector('#ckHand'),
-    ddlHandGesture: document.querySelector('#ddlHandGesture')
+    ddlHandGesture: document.querySelector('#ddlHandGesture'),
+    sheetCode: document.querySelector('#sheetCode')
 }
 
 let previousCK;
 let previousddl;
 var txtInfo = document.getElementById("txtInfo");
+
+chrome.storage.sync.get(['sheetCodeIsOn'], (result) => {
+    if(result.sheetCodeIsOn !== null){
+        $el.sheetCode.value = result.sheetCodeIsOn.sheetCode;
+        $el.sheetCode.readOnly = true;
+    }else{
+        $el.sheetCode.readOnly = false;
+    }
+});
 
 chrome.extension.onMessage.addListener(
     function (request, sender, sendResponse) {
@@ -16,7 +26,7 @@ chrome.extension.onMessage.addListener(
 
         if (request.name === "sheetCodeIsOn") {
             if (request.sheetCode !== null && request.detail !== null && request.sheetID !== null) {
-                console.log('hihi');
+
                 // Start Model
                 chrome.storage.local.get(['hasCapturedStream'], (data) => {
                     if (data.hasCapturedStream) {
@@ -26,10 +36,18 @@ chrome.extension.onMessage.addListener(
                     } else {
                         chrome.runtime.openOptionsPage()
                     }
-                    window.close()
+                    // window.close()
                 })
 
+                chrome.storage.sync.set({ "sheetCodeIsOn": request });
+
+                $el.sheetCode.value = request.sheetCode;
+                $el.sheetCode.readOnly = true;
                 txtInfo.innerHTML = '';
+
+            }else{
+                chrome.storage.sync.set({ "sheetCodeIsOn": null });
+                txtInfo.innerHTML = 'Sheet Code not found!';
             }
         }
     }
@@ -144,6 +162,7 @@ $el.stop.addEventListener('click', () => {
     setHandsfreeState(false)
     chrome.runtime.sendMessage({ action: 'handsfreeStop' })
     chrome.storage.sync.set({ "handStatusDrawing": "stop" });
+    chrome.storage.sync.set({ "sheetCodeIsOn": null });
     window.close()
 })
 
