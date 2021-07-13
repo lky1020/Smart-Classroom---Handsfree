@@ -12,10 +12,18 @@ let previousddl;
 var txtInfo = document.getElementById("txtInfo");
 
 chrome.storage.sync.get(['sheetCodeIsOn'], (result) => {
-    if(result.sheetCodeIsOn !== null){
-        $el.sheetCode.value = result.sheetCodeIsOn.sheetCode;
-        $el.sheetCode.readOnly = true;
-    }else{
+    if (result.sheetCodeIsOn !== null) {
+        
+        // To prevent system auto fill when user directly refresh extension instead stop the model
+        if(!$el.start.classList.contains('d-none')){
+            $el.sheetCode.value = result.sheetCodeIsOn.sheetCode;
+            $el.sheetCode.readOnly = true;
+        }else{
+            $el.sheetCode.value = '';
+            $el.sheetCode.readOnly = false;
+        }
+        
+    } else {
         $el.sheetCode.readOnly = false;
     }
 });
@@ -36,7 +44,7 @@ chrome.extension.onMessage.addListener(
                     } else {
                         chrome.runtime.openOptionsPage()
                     }
-                    // window.close()
+                    window.close()
                 })
 
                 chrome.storage.sync.set({ "sheetCodeIsOn": request });
@@ -45,7 +53,7 @@ chrome.extension.onMessage.addListener(
                 $el.sheetCode.readOnly = true;
                 txtInfo.innerHTML = '';
 
-            }else{
+            } else {
                 chrome.storage.sync.set({ "sheetCodeIsOn": null });
                 txtInfo.innerHTML = 'Sheet Code not found!';
             }
@@ -171,16 +179,16 @@ $el.stop.addEventListener('click', () => {
  */
 function setHandsfreeState(isStarted) {
     if (isStarted) {
-        $el.start.classList.add('d-none')
-        $el.stop.classList.remove('d-none')
+        $el.start.classList.add('d-none');
+        $el.stop.classList.remove('d-none');
 
         $el.status.classList.add('label-success');
         $el.status.classList.remove('label-error');
         $el.status.innerHTML = 'Started';
 
     } else {
-        $el.start.classList.remove('d-none')
-        $el.stop.classList.add('d-none')
+        $el.start.classList.remove('d-none');
+        $el.stop.classList.add('d-none');
 
         $el.status.classList.remove('label-success');
         $el.status.classList.add('label-error');

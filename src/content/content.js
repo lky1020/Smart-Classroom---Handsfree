@@ -18,7 +18,8 @@ const state = {
     handModuleIsOn: true,
     handGesture: null,
     handStatusDrawing: null,
-    previousGesture: null // used to prevent gesture perfrom too many time
+    previousGesture: null, // used to prevent gesture perfrom too many time
+    sheetCode: null
 };
 
 const numberGestureArr = ["One", "Two", "Three", "Four", "Five"];
@@ -55,13 +56,13 @@ function keydown(evt) {
             alert("Please start the model first!");
 
         }
-    }else if(evt.keyCode == 32){
+    } else if (evt.keyCode == 32) {
 
-        if(evt.path[0].tagName === "TEXTAREA"){
-            if(evt.path[0].value.trim().length === 0){
+        if (evt.path[0].tagName === "TEXTAREA") {
+            if (evt.path[0].value.trim().length === 0) {
                 state.chatbotEnable = true;
             }
-        }else{
+        } else {
             state.chatbotEnable = true;
         }
     }
@@ -1967,6 +1968,7 @@ async function loadState() {
     state.handModuleIsOn = (await browser.storage.sync.get(["handModuleIsOn"])).handModuleIsOn;
     state.handGesture = (await browser.storage.sync.get(["handGesture"])).handGesture;
     state.handStatusDrawing = (await browser.storage.sync.get(["handStatusDrawing"])).handStatusDrawing;
+    state.sheetCode = (await browser.storage.sync.get(["sheetCodeIsOn"])).sheetCodeIsOn;
 }
 
 // Listen to any changes on the storage
@@ -1982,6 +1984,9 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 
         } else if (key === "handStatusDrawing") {
             state.handStatusDrawing = storageChange.newValue;
+
+        } else if (key === "sheetCodeIsOn") {
+            state.sheetCode = storageChange.newValue;
         }
     }
 });
@@ -2090,48 +2095,51 @@ function handGestureAction(gestureName) {
 
 }
 
-function handGestureChatBox(gestureName){
-     // Index 2 == meet chatbox
-     var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
+function handGestureChatBox(gestureName) {
+    // Index 2 == meet chatbox
+    var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
 
-     if (meetTool.length != 0 && state.username != null) {
+    if (meetTool.length != 0 && state.username != null) {
 
-         if (meetTool[2].ariaPressed === "false") {
-             meetTool[2].click();
-         }
+        if (meetTool[2].ariaPressed === "false") {
+            meetTool[2].click();
+        }
 
-         // Wait for Google Meet to open the Chat Box
-         var delayInMilliseconds = 500; //0.5 second
+        // Wait for Google Meet to open the Chat Box
+        var delayInMilliseconds = 500; //0.5 second
 
-         setTimeout(function () {
-             var textarea = document.getElementsByTagName("textarea");;
+        setTimeout(function () {
+            var textarea = document.getElementsByTagName("textarea");;
 
-             if (textarea != null && state.chatbotText != "") {
-                 console.log(textarea[0]);
-                 textarea[0].click();
-                 textarea[0].value = 'ChatBot: \n' + state.username + ' ' + state.chatbotText;
+            if (textarea != null && state.chatbotText != "") {
+                console.log(textarea[0]);
+                textarea[0].click();
+                textarea[0].value = 'ChatBot: \n' + state.username + ' ' + state.chatbotText;
 
-                 const keyboardEvent = new KeyboardEvent('keydown', {
-                     code: 'Enter',
-                     key: 'Enter',
-                     charCode: 13,
-                     keyCode: 13,
-                     view: window,
-                     bubbles: true,
-                 });
+                const keyboardEvent = new KeyboardEvent('keydown', {
+                    code: 'Enter',
+                    key: 'Enter',
+                    charCode: 13,
+                    keyCode: 13,
+                    view: window,
+                    bubbles: true,
+                });
 
-                 textarea[0].dispatchEvent(keyboardEvent);
+                textarea[0].dispatchEvent(keyboardEvent);
 
-                var data = {
-                    name: state.username,
-                    gesture: gestureName,
+                if (state.sheetCode.sheetID !== null){
+                    var data = {
+                        name: "meetAction",
+                        username: state.username,
+                        gesture: gestureName,
+                        sheetID: state.sheetCode.sheetID
+                    }
+    
+                    chrome.runtime.sendMessage(data);
                 }
-
-                chrome.runtime.sendMessage(data);
-
-             }
-         }, delayInMilliseconds);
-     }
+            }
+        }, delayInMilliseconds);
+    }
 }
 
 function injectMediaSourceSwap() {
@@ -2158,16 +2166,16 @@ function handPoseInRealTime() {
         // Need to open Google Meet People Tool to get current username
         var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
 
-        if(meetTool.length != 0){
+        if (meetTool.length != 0) {
 
             if (state.username == null) {
                 if (meetTool[1].ariaPressed === "false") {
                     meetTool[1].click();
-    
+
                     var delayInMilliseconds = 500; //0.5 second
-    
+
                     setTimeout(function () {
-                        if(document.getElementsByClassName("kvLJWc")[0] != null){
+                        if (document.getElementsByClassName("kvLJWc")[0] != null) {
                             var username = document.getElementsByClassName("kvLJWc")[0].getElementsByTagName("span")[0].innerHTML;
                             state.username = username;
 
@@ -2180,7 +2188,7 @@ function handPoseInRealTime() {
                 }
             }
         }
-        
+
         if (state.handModuleIsOn) {
 
             // Change Gesture without refresh page 
@@ -2231,7 +2239,7 @@ function handPoseInRealTime() {
 
                                 handGestureAction(handGesture.name);
 
-                                if(state.chatbotText != null && state.chatbotEnable == true){
+                                if (state.chatbotText != null && state.chatbotEnable == true) {
                                     handGestureChatBox(handGesture.name);
                                     state.chatbotEnable = false;
                                 }
@@ -2267,13 +2275,13 @@ function handPoseInRealTime() {
                     const time = Date.now();
                     frames++;
                     if (time > prevTime + 1000) {
-                        let fps = Math.round( ( frames * 1000 ) / ( time - prevTime ) );
+                        let fps = Math.round((frames * 1000) / (time - prevTime));
                         prevTime = time;
                         frames = 0;
 
                         console.info('FPS: ', fps);
                     }
-                }else{
+                } else {
                     state.statusBox.innerHTML = "";
                 }
             }

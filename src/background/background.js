@@ -74,8 +74,6 @@ const API_KEY = 'AIzaSyADyoalWfI5ZIDSjvXE7lyZunZNPdIka1s';
 const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
 const MANAGEMENT_SPREADSHEET_ID = '10Jz7g8PxIu_f03wIMIfyCaOA6DfRtmuQw3hY_iUMwMY';
 const MANAGEMENT_SPREADSHEET_TAB_NAME = 'main';
-// var SPREADSHEET_ID = '';
-var SPREADSHEET_TAB_NAME = 'main';
 
 function onGAPILoad() {
 
@@ -148,30 +146,22 @@ chrome.extension.onMessage.addListener(
                     console.log('Error', error)
                 });
 
-            } else {
+            } else if (request.name === 'meetAction') {
 
                 // To prevent model start also append to Google Sheet
                 if (request.name !== undefined && request.gesture !== undefined) {
                     const body = {
                         values: [[
-                            request.name,
+                            request.username,
                             request.gesture,
-                            new Date() // Timestamp
+                            new Date()
                         ]]
                     };
 
-                    // gapi.client.sheets.spreadsheets.create({
-                    //     properties: {
-                    //         title: 'Hihidwadaw'
-                    //     }
-                    // }).then((response) => {
-                    //     console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
-                    // });
-
                     // Append values to the spreadsheet
                     gapi.client.sheets.spreadsheets.values.append({
-                        spreadsheetId: MANAGEMENT_SPREADSHEET_ID,
-                        range: MANAGEMENT_SPREADSHEET_TAB_NAME,
+                        spreadsheetId: request.sheetID,
+                        range: 'Sheet1',
                         valueInputOption: 'USER_ENTERED',
                         resource: body
                     }).then((response) => {
