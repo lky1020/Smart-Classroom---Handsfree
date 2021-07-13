@@ -10,19 +10,20 @@
 
 <body>
     <section class="container grid-lg">
-        <h1 style="font-size: 1.5em"><img src="/assets/favicon.png" style="vertical-align: middle;" height="32px"> Smart Classroom</h1>
-        
+        <h1 style="font-size: 1.5em"><img src="/assets/favicon.png" style="vertical-align: middle;" height="32px"> Smart
+            Classroom</h1>
+
         <b>Model State:</b><br>
         <div style="margin-left: 15px;">
             <!-- Status -->
             <span>Status: <span id="status" class="label label-error">Uninitialized</span></span>
-        
+
             <br>
-            
+
             <!-- Hand Module -->
             <div class="columns">
                 <div class="column">
-                    Hand Module: 
+                    Hand Module:
                 </div>
                 <div class="column" style="text-align: end;">
                     <label class="switch">
@@ -34,20 +35,29 @@
 
             <div class="columns" style="margin-left: 15px;">
                 <div class="column">
-                    Hand Gesture: 
+                    Hand Gesture:
                 </div>
                 <div class="column" style="text-align: end;">
                     <select id="ddlHandGesture" name="handGesture">
                         <option value="number">Number</option>
                         <option value="sign">Sign</option>
                         <option value="mouse">Mouse</option>
-                      </select>
+                    </select>
+                </div>
+            </div>
+
+            <div class="columns" style="margin-left: 15px;">
+                <div class="column">
+                    Sheet Code:
+                </div>
+                <div class="column" style="text-align: end;">
+                    <input type="text" id="sheetCode" name="sheetCode" maxlength="6" size="5">
                 </div>
             </div>
         </div>
 
         <br>
-        
+
         <div class="columns">
             <div class="column">
                 <button id="handsfree-start" class="btn btn-primary btn-block">Start Model</button>

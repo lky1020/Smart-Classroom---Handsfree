@@ -10,6 +10,31 @@ let previousCK;
 let previousddl;
 var txtInfo = document.getElementById("txtInfo");
 
+chrome.extension.onMessage.addListener(
+    function (request, sender, sendResponse) {
+        console.log(request);
+
+        if (request.name === "sheetCodeIsOn") {
+            if (request.sheetCode !== null && request.detail !== null && request.sheetID !== null) {
+                console.log('hihi');
+                // Start Model
+                chrome.storage.local.get(['hasCapturedStream'], (data) => {
+                    if (data.hasCapturedStream) {
+                        chrome.runtime.sendMessage({ action: 'handsfreeStart' })
+                        chrome.storage.sync.set({ "handStatusDrawing": "start" });
+                        setHandsfreeState(true)
+                    } else {
+                        chrome.runtime.openOptionsPage()
+                    }
+                    window.close()
+                })
+
+                txtInfo.innerHTML = '';
+            }
+        }
+    }
+);
+
 chrome.storage.sync.get(['handModuleIsOn'], (result) => {
     $el.ckHand.checked = result.handModuleIsOn;
     previousCK = result.handModuleIsOn;
@@ -90,16 +115,26 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
  * - If the user hasn't approved permissions yet, then visit the options page first
  */
 $el.start.addEventListener('click', () => {
-    chrome.storage.local.get(['hasCapturedStream'], (data) => {
-        if (data.hasCapturedStream) {
-            chrome.runtime.sendMessage({ action: 'handsfreeStart' })
-            chrome.storage.sync.set({ "handStatusDrawing": "start" });
-            setHandsfreeState(true)
+    var sheetID = document.getElementById('sheetCode');
+    if (sheetID.value !== "") {
+
+        if (/^\d{6}$/.test(sheetID.value)) {
+
+            // Sned message to background to check whether sheet code is valid
+            var data = {
+                name: 'sheetCode',
+                code: sheetID.value,
+            }
+            chrome.runtime.sendMessage(data);
+
         } else {
-            chrome.runtime.openOptionsPage()
+            txtInfo.innerHTML = 'Please Enter 6 digit number only!';
         }
-        window.close()
-    })
+
+    } else {
+        txtInfo.innerHTML = 'Please Enter Sheet Code!';
+    }
+
 })
 
 /**

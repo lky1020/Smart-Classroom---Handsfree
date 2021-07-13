@@ -72,11 +72,12 @@ postJWT(getJWT(), function (response) {
 
 const API_KEY = 'AIzaSyADyoalWfI5ZIDSjvXE7lyZunZNPdIka1s';
 const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v4"];
-const SPREADSHEET_ID = '1uzCzvLpFu9xeDTvPsot8AS-UmbaabsO4pf6sGDqsP-k';
-const SPREADSHEET_TAB_NAME = 'main';
+const MANAGEMENT_SPREADSHEET_ID = '10Jz7g8PxIu_f03wIMIfyCaOA6DfRtmuQw3hY_iUMwMY';
+const MANAGEMENT_SPREADSHEET_TAB_NAME = 'main';
+// var SPREADSHEET_ID = '';
+var SPREADSHEET_TAB_NAME = 'main';
 
 function onGAPILoad() {
-
 
     gapi.client.init({
         // Don't pass client nor scope as these will init auth2, which we don't want
@@ -86,27 +87,37 @@ function onGAPILoad() {
     }).then(function () {
         console.log('gapi initialized')
 
-        // User need to authorize their own account first to use the service account
-        chrome.identity.getAuthToken({ interactive: true }, async function (token) {
-
-            gapi.auth.setToken({
-                'access_token': clientToken,
-            });
-
-            gapi.client.sheets.spreadsheets.values.get({
-                spreadsheetId: SPREADSHEET_ID,
-                range: SPREADSHEET_TAB_NAME,
-            }).then(function (response) {
-
-                console.log(`Got ${response.result.values.length} rows back`)
-
-            });
-
-        })
-
     }, function (error) {
-        console.log('error', error)
+        console.log('Error = ', error);
     });
+}
+
+
+function checkSheetCode(programmeAvailable, sheetCode) {
+
+    var data = {
+        name: 'sheetCodeIsOn',
+        sheetCode: null,
+        detail: null,
+        sheetID: null
+    }
+
+    for (let i = 0; i < programmeAvailable.length; i++) {
+        console.log(programmeAvailable[i][0]);
+
+        if (sheetCode === programmeAvailable[i][0]) {
+
+            SPREADSHEET_ID = programmeAvailable[i][2];
+
+            data.sheetCode = programmeAvailable[i][0];
+            data.detail = programmeAvailable[i][1];
+            data.sheetID = programmeAvailable[i][2];
+            break;
+        }
+    }
+
+    // Send data to popup.js to process
+    chrome.runtime.sendMessage(data);
 }
 
 chrome.extension.onMessage.addListener(
@@ -119,41 +130,62 @@ chrome.extension.onMessage.addListener(
                 'access_token': clientToken,
             });
 
-            // To prevent model start also append to Google Sheet
-            if (request.name !== undefined && request.gesture !== undefined) {
-                const body = {
-                    values: [[
-                        request.name,
-                        request.gesture,
-                        new Date() // Timestamp
-                    ]]
-                };
+            if (request.name === 'sheetCode') {
+                gapi.client.sheets.spreadsheets.values.get({
+                    spreadsheetId: MANAGEMENT_SPREADSHEET_ID,
+                    range: MANAGEMENT_SPREADSHEET_TAB_NAME,
+                }).then(function (response) {
 
-                // gapi.client.sheets.spreadsheets.create({
-                //     properties: {
-                //         title: 'Hihidwadaw'
-                //     }
-                // }).then((response) => {
-                //     console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
-                // });
+                    console.log(`Got ${response.result.values.length} rows back`);
 
-                // Append values to the spreadsheet
-                gapi.client.sheets.spreadsheets.values.append({
-                    spreadsheetId: SPREADSHEET_ID,
-                    range: SPREADSHEET_TAB_NAME,
-                    valueInputOption: 'USER_ENTERED',
-                    resource: body
-                }).then((response) => {
-                    // On success
-                    console.log(`${response.result.updates.updatedCells} cells appended.`)
-                    sendResponse({ success: true });
+                    const programmeAvailable = (response.result.values);
+                    programmeAvailable.shift(); // Remove title row in Sheet from the array
+                    console.log(programmeAvailable);
+
+                    checkSheetCode(programmeAvailable, request.code);
 
                 }, function (error) {
-
-                    var status = error.result.error.status;
-                    alert('Error occur in Google SpreadSheet: ' + status + '\nPlease contact TARUC Management');
-
+                    console.log('Error', error)
                 });
+
+            } else {
+
+                // To prevent model start also append to Google Sheet
+                if (request.name !== undefined && request.gesture !== undefined) {
+                    const body = {
+                        values: [[
+                            request.name,
+                            request.gesture,
+                            new Date() // Timestamp
+                        ]]
+                    };
+
+                    // gapi.client.sheets.spreadsheets.create({
+                    //     properties: {
+                    //         title: 'Hihidwadaw'
+                    //     }
+                    // }).then((response) => {
+                    //     console.log('Spreadsheet ID: ' + response.result.spreadsheetId);
+                    // });
+
+                    // Append values to the spreadsheet
+                    gapi.client.sheets.spreadsheets.values.append({
+                        spreadsheetId: MANAGEMENT_SPREADSHEET_ID,
+                        range: MANAGEMENT_SPREADSHEET_TAB_NAME,
+                        valueInputOption: 'USER_ENTERED',
+                        resource: body
+                    }).then((response) => {
+                        // On success
+                        console.log(`${response.result.updates.updatedCells} cells appended.`)
+                        sendResponse({ success: true });
+
+                    }, function (error) {
+
+                        var status = error.result.error.status;
+                        alert('Error occur in Google SpreadSheet: ' + status + '\nPlease contact TARUC Management');
+
+                    });
+                }
             }
         })
 

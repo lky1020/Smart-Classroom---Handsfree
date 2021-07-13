@@ -2122,7 +2122,7 @@ function handGestureChatBox(gestureName){
 
                  textarea[0].dispatchEvent(keyboardEvent);
 
-                 var data = {
+                var data = {
                     name: state.username,
                     gesture: gestureName,
                 }
