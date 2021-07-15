@@ -154,7 +154,7 @@ chrome.extension.onMessage.addListener(
                         values: [[
                             request.username,
                             request.gesture,
-                            new Date()
+                            new Date().toString()
                         ]]
                     };
 
