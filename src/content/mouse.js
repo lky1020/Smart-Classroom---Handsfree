@@ -1,3 +1,6 @@
+/* 
+Allow other website to has Handsfree's Mouse Function (Google Meet own will be written in content.js)
+*/
 const handsfree = new Handsfree({
     isClient: true,
     hands: {

@@ -11,17 +11,18 @@ const handsfree = new Handsfree({
 const state = {
     video: null,
     canvas: null,
-    username: null,
-    statusBox: null,
-    chatbotText: null,
-    chatbotEnable: false,
-    handModuleIsOn: true,
-    handGesture: null,
-    handStatusDrawing: null,
+    username: null, // current username
+    statusBox: null, // use to display the gesture identified
+    chatbotText: null, // use to store message to put in Google Meet's Chatbox
+    chatbotEnable: false, // use to determine whether send the chatbotText (Spacebar Key)
+    handModuleIsOn: true, // whether start the hand gesture tracking and recognition module
+    handGesture: null, // store current hand gesture module (Number, Sign, Mouse)
+    handStatusDrawing: null, // whether can draw hand landmark on the canvas
     previousGesture: null, // used to prevent gesture perfrom too many time
-    sheetCode: null
+    sheetCode: null // use to store gapi spreadsheet detail get from popup.js
 };
 
+// Available Gesture
 const numberGestureArr = ["One", "Two", "Three", "Four", "Five"];
 const signGestureArr = ["Help", "Thank_You", "Nice,I'm_Good", "No_Question", "Webcam_Microphone", "Stick_Captions"];
 
@@ -32,8 +33,8 @@ function keydown(evt) {
         evt = event;
     }
 
-    // Only available for number && sign (Mouse eexcluded)
-    if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 49) { // CTRL + Shift + 1
+    // Only available for number && sign (Mouse excluded)
+    if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 49) { // CTRL + Shift + 1 (number)
         if (state.handStatusDrawing === 'start') {
 
             state.handGesture = "number";
@@ -45,7 +46,7 @@ function keydown(evt) {
 
         }
     }
-    else if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 50) { // CTRL + Shift + 2
+    else if (evt.ctrlKey && evt.shiftKey && evt.keyCode == 50) { // CTRL + Shift + 2 (sign)
         if (state.handStatusDrawing === 'start') {
 
             state.handGesture = "sign";
@@ -56,7 +57,7 @@ function keydown(evt) {
             alert("Please start the model first!");
 
         }
-    } else if (evt.keyCode == 32) {
+    } else if (evt.keyCode == 32) { // Spacebar key (To activate Chatbot to send message in Google Meet)
 
         if (evt.path[0].tagName === "TEXTAREA") {
             if (evt.path[0].value.trim().length === 0) {
@@ -68,10 +69,7 @@ function keydown(evt) {
     }
 }
 
-document.body.onkeypress = function (e) {
-    console.log(e);
-}
-
+// Setup Number Gesture 
 function number_gesture() {
     // One
     handsfree.useGesture({
@@ -984,6 +982,7 @@ function number_gesture() {
     })
 }
 
+// Setup Sign Gesture 
 function sign_gesture() {
     // Help
     handsfree.useGesture({
@@ -1901,22 +1900,21 @@ chrome.runtime.onMessage.addListener(function (message) {
 })
 
 async function overrideGetUserMedia() {
-    //Create canvas use for replace the Google Meet Video
+    // Create canvas use for replace the Google Meet Video
     var canvas = document.createElement("canvas");
     canvas.setAttribute("id", "sourceCanvas");
     canvas.setAttribute("style", "display:none");
     document.documentElement.appendChild(canvas);
     state.canvas = canvas;
 
-    //Create status box for display message
+    // Create status box for display message
     var statusBox = document.createElement("div");
     statusBox.setAttribute("id", "statusBox");
-    statusBox.setAttribute("style",
-        "width: 175px; height: 25px; color: white; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
+    statusBox.setAttribute("style", "width: 175px; height: 25px; color: white; position: absolute; z-index: 999; padding: 5px 5px 0px 5px");
     document.body.appendChild(statusBox);
     state.statusBox = statusBox;
 
-    //Get user video for replace the video in Google Meet
+    //Get user local video to replace the video in Google Meet
     injectMediaSourceSwap();
 
     // set up the mutation observer
@@ -1926,7 +1924,6 @@ async function overrideGetUserMedia() {
 
         var canvas = document.getElementById("realVideo");
         if (canvas) {
-            // console.log('I\'m In!');
             realVideoAdded(canvas);
             me.disconnect(); // stop observing
             return;
@@ -1942,7 +1939,6 @@ async function overrideGetUserMedia() {
 
 function realVideoAdded(video) {
     state.video = video;
-    // console.log(video);
 
     video.onloadedmetadata = function () {
         //Set Width and Height
@@ -1953,7 +1949,8 @@ function realVideoAdded(video) {
 
         state.video.play();
 
-        handPoseInRealTime();
+        // Run the module
+        handInRealTime();
     };
 
 }
@@ -1971,7 +1968,7 @@ async function loadState() {
     state.sheetCode = (await browser.storage.sync.get(["sheetCodeIsOn"])).sheetCodeIsOn;
 }
 
-// Listen to any changes on the storage
+// Listen to any changes on the storage and update the state
 chrome.storage.onChanged.addListener(function (changes, namespace) {
     for (key in changes) {
         var storageChange = changes[key];
@@ -1995,6 +1992,7 @@ function loadHandGesture() {
     number_gesture();
     sign_gesture();
 
+    // Enable handsfree's mouse function
     if (state.handGesture === 'mouse') {
         handsfree.use('pinchClick', ({ hands }) => {
             if (!hands.multiHandLandmarks) return
@@ -2026,6 +2024,7 @@ function loadHandGesture() {
     }
 }
 
+// Action when gesture detected
 function handGestureAction(gestureName) {
 
     if (gestureName !== state.previousGesture) {
@@ -2095,6 +2094,7 @@ function handGestureAction(gestureName) {
 
 }
 
+// Deal with Google Meet's Chatbox
 function handGestureChatBox(gestureName) {
     // Index 2 == meet chatbox
     var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
@@ -2112,10 +2112,11 @@ function handGestureChatBox(gestureName) {
             var textarea = document.getElementsByTagName("textarea");;
 
             if (textarea != null && state.chatbotText != "") {
-                console.log(textarea[0]);
+                // console.log(textarea[0]);
                 textarea[0].click();
                 textarea[0].value = 'ChatBot: \n' + state.username + ' ' + state.chatbotText;
 
+                // Assign Enter key to Google Meet's chatbox to send message
                 const keyboardEvent = new KeyboardEvent('keydown', {
                     code: 'Enter',
                     key: 'Enter',
@@ -2127,6 +2128,7 @@ function handGestureChatBox(gestureName) {
 
                 textarea[0].dispatchEvent(keyboardEvent);
 
+                // Append the gesture detected to Gogole Sheet (Based on state.sheetCode.sheetID)
                 if (state.sheetCode.sheetID !== null){
                     var data = {
                         name: "meetAction",
@@ -2142,6 +2144,7 @@ function handGestureChatBox(gestureName) {
     }
 }
 
+// Change the Google Meet's own video stream with our own
 function injectMediaSourceSwap() {
     // from https://stackoverflow.com/questions/9515704/insert-code-into-the-page-context-using-a-content-script
     var script = document.createElement("script");
@@ -2152,7 +2155,8 @@ function injectMediaSourceSwap() {
     (document.head || document.documentElement).appendChild(script);
 }
 
-function handPoseInRealTime() {
+// Perform Hand Gesture Tracking and Recognition
+function handInRealTime() {
 
     let prevTime = Date.now(), frames = 0;
 
@@ -2162,10 +2166,10 @@ function handPoseInRealTime() {
         ctx.clearRect(0, 0, state.canvas.width, state.canvas.height);
         ctx.drawImage(state.video, 0, 0);
 
-
         // Need to open Google Meet People Tool to get current username
         var meetTool = document.querySelectorAll('[jsname="A5il2e"]');
 
+        // Get Current username
         if (meetTool.length != 0) {
 
             if (state.username == null) {
@@ -2191,7 +2195,8 @@ function handPoseInRealTime() {
 
         if (state.handModuleIsOn) {
 
-            // Change Gesture without refresh page 
+            // Change Gesture without refresh page
+            // enable and disable gesture based on state.handGesture
             if (state.handGesture === "number") {
 
                 // Number
@@ -2216,7 +2221,7 @@ function handPoseInRealTime() {
                     handsfree.gesture[signGestureArr[i]].enable()
                 }
 
-            }else{
+            }else{ // Disable all gesture for Mosue function
                 // Number
                 for (let i = 0; i < numberGestureArr.length; i++) {
                     handsfree.gesture[numberGestureArr[i]].disable()
@@ -2228,6 +2233,7 @@ function handPoseInRealTime() {
                 }
             }
 
+            // Handsfree returing data
             if (Object.keys(handsfree.data).length !== 0) {
 
                 if (state.handStatusDrawing === 'start') {
@@ -2242,7 +2248,6 @@ function handPoseInRealTime() {
 
                         } else {
                             handGesture = gesture[1];
-
                         }
 
                         if (state.handGesture !== 'mouse') {
@@ -2251,6 +2256,7 @@ function handPoseInRealTime() {
                                 handGestureAction(handGesture.name);
 
                                 if (state.chatbotText != null && state.chatbotEnable == true) {
+                                    // Let Google Meet send message
                                     handGestureChatBox(handGesture.name);
                                     state.chatbotEnable = false;
                                 }
@@ -2264,6 +2270,7 @@ function handPoseInRealTime() {
                             }
                         }
 
+                        // Draw hand landmarks on the canvas
                         if (handsfree.data.hands.multiHandLandmarks) {
                             for (const landmarks of handsfree.data.hands.multiHandLandmarks) {
 

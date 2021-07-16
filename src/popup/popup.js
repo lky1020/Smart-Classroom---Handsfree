@@ -11,6 +11,11 @@ let previousCK;
 let previousddl;
 var txtInfo = document.getElementById("txtInfo");
 
+// Get latest Sheet Code
+/*
+Remarks: Directly refresh chrome extension will cause system setup sheetCode value (Not Recommended)
+Recommended: Stop Model instead of directly refresh
+*/
 chrome.storage.sync.get(['sheetCodeIsOn'], (result) => {
     if (result.sheetCodeIsOn !== null) {
         
@@ -46,7 +51,8 @@ chrome.extension.onMessage.addListener(
                     }
                     window.close()
                 })
-
+                
+                // Let content.js able know the request data
                 chrome.storage.sync.set({ "sheetCodeIsOn": request });
 
                 $el.sheetCode.value = request.sheetCode;
@@ -54,6 +60,7 @@ chrome.extension.onMessage.addListener(
                 txtInfo.innerHTML = '';
 
             } else {
+                // Let content.js able know the request data
                 chrome.storage.sync.set({ "sheetCodeIsOn": null });
                 txtInfo.innerHTML = 'Sheet Code not found!';
             }
@@ -177,7 +184,7 @@ $el.stop.addEventListener('click', () => {
 })
 
 /**
- * Sets the button class
+ * Sets the button and label class
  */
 function setHandsfreeState(isStarted) {
     if (isStarted) {
@@ -197,6 +204,7 @@ function setHandsfreeState(isStarted) {
         $el.status.innerHTML = 'Uninitialized';
     }
 }
+
 chrome.storage.local.get(['isHandsfreeStarted'], function (data) {
     setHandsfreeState(data.isHandsfreeStarted)
 })

@@ -8,18 +8,18 @@ window.navigator.mediaDevices.getUserMedia = async function (constraints) {
             navigator.mediaDevices,
             constraints
         );
-        console.log('Real Video');
+
         var res = canvas.captureStream(10);
-        // var videoTrack = res.getVideoTracks()[0];
-        // var videoTrackStop = videoTrack.stop;
-        // videoTrack.stop = function () {
-        //     stream.getVideoTracks()[0].stop();
-        //     videoTrackStop.call(videoTrack);
-        // };
+        var videoTrack = res.getVideoTracks()[0];
+        var videoTrackStop = videoTrack.stop;
+        videoTrack.stop = function () {
+            stream.getVideoTracks()[0].stop();
+            videoTrackStop.call(videoTrack);
+        };
 
         var videoElement = tryGetVideoElement();
-        // videoElement.height = 400;
-        // videoElement.width = 400;
+        videoElement.height = 400;
+        videoElement.width = 400;
         videoElement.srcObject = stream;
         
         return res;

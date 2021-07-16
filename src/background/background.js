@@ -1,14 +1,17 @@
 var head = document.getElementsByTagName('head')[0];
 
+// Call  onGAPILoad
 var script = document.createElement('script');
 script.type = 'text/javascript';
 script.src = "https://apis.google.com/js/client.js?onload=onGAPILoad";
 head.appendChild(script);
 
+// Check whether gapi token get
 chrome.identity.getAuthToken({ interactive: true }, function (token) {
     console.log('got the token', token);
 })
 
+// Set Up Service Account Token (To prevent Google Sheet give access denied issue)
 function postJWT(jwt, callback) {
     var xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
@@ -66,8 +69,6 @@ let clientToken;
 
 postJWT(getJWT(), function (response) {
     clientToken = JSON.parse(response).access_token;
-    //Do your api calls here using the token. 
-    //Reuse the token for up to 1 hour.
 });
 
 const API_KEY = 'AIzaSyADyoalWfI5ZIDSjvXE7lyZunZNPdIka1s';
@@ -75,6 +76,7 @@ const DISCOVERY_DOCS = ["https://sheets.googleapis.com/$discovery/rest?version=v
 const MANAGEMENT_SPREADSHEET_ID = '10Jz7g8PxIu_f03wIMIfyCaOA6DfRtmuQw3hY_iUMwMY';
 const MANAGEMENT_SPREADSHEET_TAB_NAME = 'main';
 
+// Initialize gapi
 function onGAPILoad() {
 
     gapi.client.init({
@@ -90,7 +92,7 @@ function onGAPILoad() {
     });
 }
 
-
+// Check whether sheet code in the management spreadsheet
 function checkSheetCode(programmeAvailable, sheetCode) {
 
     var data = {
@@ -123,7 +125,7 @@ chrome.extension.onMessage.addListener(
 
         // User need to authorize their own account first to use the service account
         chrome.identity.getAuthToken({ interactive: true }, function (token) {
-            // Set GAPI auth token
+            // Set GAPI auth token (service account token)
             gapi.auth.setToken({
                 'access_token': clientToken,
             });
@@ -148,7 +150,7 @@ chrome.extension.onMessage.addListener(
 
             } else if (request.name === 'meetAction') {
 
-                // To prevent model start also append to Google Sheet
+                // To prevent model start will append data to Google Sheet
                 if (request.name !== undefined && request.gesture !== undefined) {
                     const body = {
                         values: [[
