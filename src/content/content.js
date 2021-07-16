@@ -1979,6 +1979,8 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
         } else if (key === "handGesture") {
             state.handGesture = storageChange.newValue;
 
+            adjustHandGesture();
+
         } else if (key === "handStatusDrawing") {
             state.handStatusDrawing = storageChange.newValue;
 
@@ -1991,6 +1993,8 @@ chrome.storage.onChanged.addListener(function (changes, namespace) {
 function loadHandGesture() {
     number_gesture();
     sign_gesture();
+
+    adjustHandGesture();
 
     // Enable handsfree's mouse function
     if (state.handGesture === 'mouse') {
@@ -2021,6 +2025,47 @@ function loadHandGesture() {
         })
     } else {
         handsfree.disablePlugins('browser');
+    }
+}
+
+// Change Gesture without refresh page
+// enable and disable gesture based on state.handGesture
+function adjustHandGesture() {
+    
+    if (state.handGesture === "number") {
+
+        // Number
+        for (let i = 0; i < numberGestureArr.length; i++) {
+            handsfree.gesture[numberGestureArr[i]].enable()
+        }
+
+        // Sign
+        for (let i = 0; i < signGestureArr.length; i++) {
+            handsfree.gesture[signGestureArr[i]].disable()
+        }
+
+    } else if (state.handGesture === "sign") {
+
+        // Number
+        for (let i = 0; i < numberGestureArr.length; i++) {
+            handsfree.gesture[numberGestureArr[i]].disable()
+        }
+
+        // Sign
+        for (let i = 0; i < signGestureArr.length; i++) {
+            handsfree.gesture[signGestureArr[i]].enable()
+        }
+
+    } else { // Disable all gesture for Mosue function
+        // Number
+        for (let i = 0; i < numberGestureArr.length; i++) {
+            handsfree.gesture[numberGestureArr[i]].disable()
+        }
+
+        // Sign
+        for (let i = 0; i < signGestureArr.length; i++) {
+            handsfree.gesture[signGestureArr[i]].disable()
+        }
     }
 }
 
@@ -2129,14 +2174,14 @@ function handGestureChatBox(gestureName) {
                 textarea[0].dispatchEvent(keyboardEvent);
 
                 // Append the gesture detected to Gogole Sheet (Based on state.sheetCode.sheetID)
-                if (state.sheetCode.sheetID !== null){
+                if (state.sheetCode.sheetID !== null) {
                     var data = {
                         name: "meetAction",
                         username: state.username,
                         gesture: gestureName,
                         sheetID: state.sheetCode.sheetID
                     }
-    
+
                     chrome.runtime.sendMessage(data);
                 }
             }
@@ -2194,44 +2239,6 @@ function handInRealTime() {
         }
 
         if (state.handModuleIsOn) {
-
-            // Change Gesture without refresh page
-            // enable and disable gesture based on state.handGesture
-            if (state.handGesture === "number") {
-
-                // Number
-                for (let i = 0; i < numberGestureArr.length; i++) {
-                    handsfree.gesture[numberGestureArr[i]].enable()
-                }
-
-                // Sign
-                for (let i = 0; i < signGestureArr.length; i++) {
-                    handsfree.gesture[signGestureArr[i]].disable()
-                }
-
-            } else if (state.handGesture === "sign") {
-
-                // Number
-                for (let i = 0; i < numberGestureArr.length; i++) {
-                    handsfree.gesture[numberGestureArr[i]].disable()
-                }
-
-                // Sign
-                for (let i = 0; i < signGestureArr.length; i++) {
-                    handsfree.gesture[signGestureArr[i]].enable()
-                }
-
-            }else{ // Disable all gesture for Mosue function
-                // Number
-                for (let i = 0; i < numberGestureArr.length; i++) {
-                    handsfree.gesture[numberGestureArr[i]].disable()
-                }
-
-                // Sign
-                for (let i = 0; i < signGestureArr.length; i++) {
-                    handsfree.gesture[signGestureArr[i]].disable()
-                }
-            }
 
             // Handsfree returing data
             if (Object.keys(handsfree.data).length !== 0) {
