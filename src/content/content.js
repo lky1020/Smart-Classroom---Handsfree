@@ -2215,6 +2215,17 @@ function handPoseInRealTime() {
                 for (let i = 0; i < signGestureArr.length; i++) {
                     handsfree.gesture[signGestureArr[i]].enable()
                 }
+
+            }else{
+                // Number
+                for (let i = 0; i < numberGestureArr.length; i++) {
+                    handsfree.gesture[numberGestureArr[i]].disable()
+                }
+
+                // Sign
+                for (let i = 0; i < signGestureArr.length; i++) {
+                    handsfree.gesture[signGestureArr[i]].disable()
+                }
             }
 
             if (Object.keys(handsfree.data).length !== 0) {
@@ -2285,15 +2296,6 @@ function handPoseInRealTime() {
                     state.statusBox.innerHTML = "";
                 }
             }
-        }
-
-        if (state.handGesture === 'mouse') {
-            ctx.beginPath();
-            ctx.save();
-
-            ctx.rect(100, 100, 1100, 550);
-            ctx.stroke();
-            ctx.restore();
         }
 
         //Refresh

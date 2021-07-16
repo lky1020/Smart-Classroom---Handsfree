@@ -146,6 +146,8 @@ $el.start.addEventListener('click', () => {
 
         if (/^\d{6}$/.test(sheetID.value)) {
 
+            txtInfo.innerHTML = 'Connecting...';
+
             // Sned message to background to check whether sheet code is valid
             var data = {
                 name: 'sheetCode',
