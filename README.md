@@ -45,6 +45,11 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 
 ![](https://i.imgur.com/Ld7fhCQ.png)
 
+## How to shutdown chrome extension
+> Remark: Directly refresh Chrome Extension in `chrome://extensions` will cause last time sheetCode auto fill in and input tag read-only. In order to solve this, just start the model and stop the model to update the sheetCode to empty string. 
+1. Open popup.js by clicking the extension
+2. Click <kbd>Stop Model</kbd> to shutdown chrome extension
+
 ## Available Gesture
 > Remark: The chrome extension provided 2 Gesture (Number and Sign) and 1 Mouse Function develop by [MIDIBlocks/handsfree](https://github.com/MIDIBlocks/handsfree)
 
