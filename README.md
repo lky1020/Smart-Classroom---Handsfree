@@ -1,4 +1,4 @@
-# 💥💥💥 This project is a Chrome Extension that developed for Google Meet that implemented [Mediapipe repo](https://google.github.io/mediapipe/solutions/hands), [Fingerpose repo](https://github.com/andypotato/fingerpose) and [Handsfree.js repo](https://github.com/midiblocks/handsfree) for Hand Landmark Detection and Hand Gesture Recognition 💥💥💥
+# 💥💥💥 This project is a Chrome Extension that developed for Google Meet that implemented [Mediapipe repo](https://google.github.io/mediapipe/solutions/hands), [Fingerpose repo](https://github.com/andypotato/fingerpose) and [Handsfree.js repo](https://github.com/MIDIBlocks/handsfree-chrome) for Hand Landmark Detection and Hand Gesture Recognition 💥💥💥
 
 <br>
 
@@ -76,4 +76,5 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 <br>
 
 # Acknowledgements
-- [MIDIBlocks/handsfree](https://github.com/MIDIBlocks/handsfree) for the original Handsfree for Chrome Extension
+- [Handsfree.js repo](https://github.com/midiblocks/handsfree) for the original Handsfree
+- [MIDIBlocks/handsfree-chrome](https://github.com/MIDIBlocks/handsfree-chrome) for the original Handsfree for Chrome Extension
