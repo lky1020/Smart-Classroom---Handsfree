@@ -31,9 +31,47 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 
 ## How to install (Reference: [Handsfree.js repo](https://github.com/midiblocks/handsfree))
 
-- Chrome: Install as an unpacked chrome extension. Visit `chrome://extensions` and enable <kbd>Developer Mode</kbd> on the top right, then click <kbd>Load unpacked</kbd> and select this project's root folder
+- Chrome: Install as an unpacked chrome extension. 
+1. Visit `chrome://extensions`
+2. Enable <kbd>Developer Mode</kbd> on the top right 
+3. Click <kbd>Load unpacked</kbd> and select this project's root folder
 
-![](https://i.imgur.com/jXmhYnb.png)
+![](https://i.imgur.com/7oLGfeI.png)
+
+## How to use in Google Meet
+1. Open popup.js by clicking the extension
+2. Get <kbd>Sheet Code</kbd> and Enter the Sheet Code
+3. Start Model
+
+![](https://i.imgur.com/Ld7fhCQ.png)
+
+## Gesture Available
+> Remark: The chrome extension provided 2 Gesture (Number and Sign) and 1 Mouse Function develop by [MIDIBlocks/handsfree](https://github.com/MIDIBlocks/handsfree)
+
+- Number (Shorcut key: LCtrl + LShift + 1)  <br>
+> Remark: All of the number will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] chosen [Gesture] options.)
+
+| ![](https://i.imgur.com/Y2q03M9.png) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/9MumRsG.png) | ![](https://i.imgur.com/aTNlNMk.png) | ![](https://i.imgur.com/crST21p.png) |
+|--|--|--|--|--|
+| One | Two | Three | Four | Five |
+
+<br>
+<br>
+
+- Sign (Shorcut key: LCtrl + LShift + 2) <br>
+> Remark: Some of the Sign (Nice, I'm Good, Thank You, No Question) will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] [Gesture])
+
+| ![](https://i.imgur.com/3seNAWn.png) | ![](https://i.imgur.com/xohVi2a.png) | ![](https://i.imgur.com/v9doTEX.png?3) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/HJy827t.png) | ![](https://i.imgur.com/hWhOiGT.png) |
+|--|--|--|--|--|--|
+| Help | Stick Caption | WebCam_Microphone | Nice, I'm Good | Thank You | No Question |
+
+<br>
+<br>
+
+- Mouse (No Shorcut Key Available) <br>
+> Remark: Required to refresh Website 
+
+  Please refer to developer website [Handsfree's Palm Pointer](https://handsfree.dev/plugin/palmpointers/)
 
 <br>
 
