@@ -76,5 +76,5 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 <br>
 
 # Acknowledgements
-- [Handsfree.js repo](https://github.com/midiblocks/handsfree) for the original Handsfree
+- [MIDIBlocks/handsfree](https://github.com/midiblocks/handsfree) for the original Handsfree
 - [MIDIBlocks/handsfree-chrome](https://github.com/MIDIBlocks/handsfree-chrome) for the original Handsfree for Chrome Extension
