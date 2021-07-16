@@ -50,6 +50,8 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 1. Open popup.js by clicking the extension
 2. Click <kbd>Stop Model</kbd> to shutdown chrome extension
 
+![](https://i.imgur.com/rYLFEPG.png)
+
 ## Available Gesture
 > Remark: The chrome extension provided 2 Gesture (Number and Sign) and 1 Mouse Function develop by [MIDIBlocks/handsfree](https://github.com/MIDIBlocks/handsfree)
 
