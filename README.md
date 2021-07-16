@@ -6,7 +6,7 @@
 
 > 🚧🐞 This project is useable but not officially released and still buggy 🐞🚧<br>
 > Reference: Mediapipe, andypotato/fingerpose, MIDIBlocks/handsfree <br>
-> Author: Tunku Abdul Rahman University College Kuala Lumpur, Malaysia (Lim Kah Yee, Joan Hau, tew Yiqi)
+> Author: Tunku Abdul Rahman University College Kuala Lumpur, Malaysia (Lim Kah Yee, Joan Hau, Tew Yiqi)
 
 This project is designed to allow Google Meet's user able to interact with each other with Hand Gesture. Besides, Handsfree's mouse function also been implemented in this chrome extension to allow user able to use their hand to control the Google Meet and also other Webpage. 🖐👀🖐
 
@@ -45,7 +45,7 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 
 ![](https://i.imgur.com/Ld7fhCQ.png)
 
-## Gesture Available
+## Available Gesture
 > Remark: The chrome extension provided 2 Gesture (Number and Sign) and 1 Mouse Function develop by [MIDIBlocks/handsfree](https://github.com/MIDIBlocks/handsfree)
 
 - Number (Shorcut key: LCtrl + LShift + 1)  <br>
