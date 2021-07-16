@@ -1,7 +1,7 @@
 {
-    "name": "Smart Classroom Handsfree Alpha - Hand Module",
+    "name": "Smart Classroom - Hand Module",
     "version": "1.0.1",
-    "description": "Google Meet Extension proposed by TARUC, Malaysia. This module is powered by Handsfree.js.",
+    "description": "Google Meet Extension proposed by TARUC, Malaysia. This module is developed based on Handsfree.js.",
     "manifest_version": 2,
     "permissions": [
         "*://*/*",
