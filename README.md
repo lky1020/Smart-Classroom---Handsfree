@@ -85,6 +85,16 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 ## Sample Result
 https://user-images.githubusercontent.com/57024183/137918644-977b2db3-66db-49e7-9735-81faea563330.mp4
 
+<br>
+
+## Full Project (Face + Hand)
+> Remark: Still in progress (Private Mode)
+[Smart Classroom](https://github.com/Joan0018/SmartClassroom)
+
+<br>
+
+## Website About Project (ICDXA)
+It is still in progress and will be released before December 31, 2021. 
 
 <br>
 
