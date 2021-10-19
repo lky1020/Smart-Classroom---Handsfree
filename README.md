@@ -53,7 +53,7 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 ![](https://i.imgur.com/rYLFEPG.png)
 
 ## Available Gesture
-> Remark: The chrome extension provided 2 Gesture (Number and Sign) and 1 Mouse Function develop by [MIDIBlocks/handsfree](https://github.com/MIDIBlocks/handsfree)
+> Remark: The chrome extension provided 2 Gesture (Number and Sign) and 1 Mouse Function.
 
 - Number (Shorcut key: LCtrl + LShift + 1)  <br>
 > Remark: All of the number will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] chosen [Gesture] options.)
