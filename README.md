@@ -68,7 +68,7 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 - Sign (Shorcut key: LCtrl + LShift + 2) <br>
 > Remark: Some of the Sign (Nice, I'm Good, Thank You, No Question) will activate ChatBot by pressing **SpaceBar** to send Message In Google's Meet Chatbox (E.g. [Your Name] [Gesture])
 
-| ![](https://i.imgur.com/3seNAWn.png) | ![](https://i.imgur.com/xohVi2a.png) | ![](https://i.imgur.com/v9doTEX.png?3) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/HJy827t.png) | ![](https://i.imgur.com/hWhOiGT.png) |
+| ![](https://i.imgur.com/3seNAWn.png) | ![](https://i.imgur.com/xohVi2a.png) | ![](https://i.imgur.com/v9doTEX.png?6) | ![](https://i.imgur.com/p7qOy0K.png) | ![](https://i.imgur.com/HJy827t.png) | ![](https://i.imgur.com/hWhOiGT.png) |
 |--|--|--|--|--|--|
 | Help | Stick Caption | WebCam_Microphone | Nice, I'm Good | Thank You | No Question |
 
