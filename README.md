@@ -32,6 +32,7 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 ## How to install (Reference: [Handsfree.js repo](https://github.com/midiblocks/handsfree))
 > Remark: Test Account: smartclassroomfyp2021@gmail.com, Password: smartclassroom2021
 
+Link to Install Video: [How to Install and Use](https://drive.google.com/file/d/1CmphpK_jC8ZYQNdENGVDKnUEgLUykBmG/view?usp=sharing)
 
 - Chrome: Install as an unpacked chrome extension. 
 1. Visit `chrome://extensions`
