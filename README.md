@@ -30,6 +30,8 @@ Each of the files are located in their respective context folders in `/src/`. Ha
 > Remark: Handsfree's "Picture in Picture" API will be disable in this Chrome Extension
 
 ## How to install (Reference: [Handsfree.js repo](https://github.com/midiblocks/handsfree))
+> Remark: Test Account: smartclassroomfyp2021@gmail.com, Password: smartclassroom2021
+
 
 - Chrome: Install as an unpacked chrome extension. 
 1. Visit `chrome://extensions`
