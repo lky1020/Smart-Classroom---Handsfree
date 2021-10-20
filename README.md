@@ -88,7 +88,7 @@ https://user-images.githubusercontent.com/57024183/137918644-977b2db3-66db-49e7-
 <br>
 
 ## Full Project (Face + Hand)
-> Remark: Still in progress (Private Mode)
+> Remark: Still in progress (Private Mode), will be released before December 31, 2021
 
 Link to Full Project: [Smart Classroom](https://github.com/Joan0018/SmartClassroom)
 
@@ -96,6 +96,13 @@ Link to Full Project: [Smart Classroom](https://github.com/Joan0018/SmartClassro
 
 ## Website About Project (ICDXA)
 > Remark: Still in progress, will be released before December 31, 2021. 
+
+<br>
+
+## Documentation of the System
+> Remark: Still in progress, will be released before December 31, 2021
+
+Link to FYP Documentation: [FYP Documentation](https://drive.google.com/drive/folders/17zTlNLnDFaBgAy1wboPPRlFuYOxo4Gvy?usp=sharing)
 
 <br>
 
