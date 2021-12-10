@@ -91,21 +91,17 @@ https://user-images.githubusercontent.com/57024183/137918644-977b2db3-66db-49e7-
 <br>
 
 ## Full Project (Face + Hand)
-> Remark: Still in progress (Private Mode), will be released before December 31, 2021
-
 Link to Full Project: [Smart Classroom](https://github.com/Joan0018/SmartClassroom)
 
 <br>
 
 ## Website About Project (ICDXA)
-> Remark: Still in progress, will be released before December 31, 2021. 
+> Remark: Still in progress, will be released. 
 
 <br>
 
 ## Documentation of the System
-> Remark: Still in progress, will be released before December 31, 2021
-
-Link to FYP Documentation: [FYP Documentation](https://drive.google.com/drive/folders/17zTlNLnDFaBgAy1wboPPRlFuYOxo4Gvy?usp=sharing)
+Link to FYP Documentation: [FYP Documentation](https://github.com/lky1020/Smart-Classroom---Handsfree/blob/main/RSF3_LimKahYee_Fulltext.pdf)
 
 <br>
 
